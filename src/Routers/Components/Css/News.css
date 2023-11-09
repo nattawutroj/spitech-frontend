@@ -1,0 +1,41 @@
+.NewOutContainer {
+    padding-top: 15vmin;
+    padding-left: 5vmin;
+    padding-right: 5vmin;
+}
+
+.NewsContainer {
+    display: flex;
+    height: auto;
+    justify-content: center;
+}
+
+.NewsText {
+    margin: 1%;
+    width: 65%;
+    opacity: 75%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    flex-direction: column;
+}
+
+p.NewsMainTitle {
+    font-size: 3.5vmax;
+    font-weight: bold;
+}
+
+p.NewsSubTitle1 {
+    margin-top: -3vmax;
+    font-size: 1.6vmax;
+}
+
+.NewsImg {
+    margin: 1%;
+    width: auto;
+}
+
+.NewsImg img {
+    width: auto;
+    height: 15vmax;
+}
