@@ -14,10 +14,10 @@ const HambergMenu = () => {
             </label>
 
             <ul class="menu__box">
-                <li><a class="menu__item" href="#">แดชบอร์ด<AiOutlineDashboard /></a></li>
-                <li><a class="menu__item" href="#">จัดการข้อมูลพื้นฐาน<IoSettingsOutline /></a></li>
-                <li><a class="menu__item" href="#">จัดการข่าวสาร<HiOutlineNewspaper /></a></li>
-                <li><a class="menu__item" href="#">ออกรายงาน<PiPrinterLight /></a></li>
+                <li><a class="menu__item" href="/">แดชบอร์ด<AiOutlineDashboard /></a></li>
+                <li><a class="menu__item" href="/">จัดการข้อมูลพื้นฐาน<IoSettingsOutline /></a></li>
+                <li><a class="menu__item" href="/">จัดการข่าวสาร<HiOutlineNewspaper /></a></li>
+                <li><a class="menu__item" href="/">ออกรายงาน<PiPrinterLight /></a></li>
             </ul>
         </div>
     )
