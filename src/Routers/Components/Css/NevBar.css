@@ -2,60 +2,62 @@
     overflow: hidden;
     position: fixed;
     width: 100%;
-    padding: 3px;
+    margin-top: 0%;
+    padding: 0;
     background-color: white;
-    list-style: none;
-    font-size: 0.5vmin;
+    list-style: none; 
     box-shadow: 0 3px 2px 0 rgba(0,0,0,.2);
-    z-index: 99999;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
 }
 
 .LogoNevBar {
-    color: #5FA1F2;
-    font-size: 4vmin;
-    font-weight: bold;
+    margin-left: 3vmax;
+    margin-right: auto;
 }
 
-h1.TextNevBar {
-    display: inline;
-    color: #5FA1F2;
-    font-size: 3vmin;
-    font-weight: bold;
-    vertical-align: 5px;
-}
-
-li {
-    float: left;
-  }
-
-li a{
+.TextNevBar {
     text-decoration: none;
-    color: inherit;
+    color: #5FA1F2;
+    font-size: 1.5vmax;
+
 }
+
+.LogoNevBar b.text {
+    color: #5FA1F2;
+    font-size: 2.1vmax;
+    font-weight: 600;
+}
+
 
 .NevMenu {
-    padding: 10px;
-    float: right;
-    font-size: 2vmin;
+    margin-right: 1%;
 }
 
+.NevMenu a {
+    text-decoration: none;
+    color: black;
+}
 .NevMenu1 {
-    padding: 10px;
-    float: right;
-    font-size: 2vmin;
+    margin: 0px 10px 0px 0px;
 }
 
-h4.LoginText {
-    display: inline;
-    color: #5FA1F2;
-    font-weight: bold;
-    vertical-align: 1px;
-    font-size: 2vmin;
+button.LoginBtn {
+    border: 0px;
+    font-size: 1.1vmax;
+    background-color: transparent;
+    color: black;
+    opacity: 0.6;
+    cursor: pointer;
 }
 
-h4.LoginLogo {
-    display: inline;
-    color: #5FA1F2;
-    font-weight: bold;
-    margin-left: 5px;
+button.LoginBtn:hover {
+    opacity: 1;
+}
+
+button.LoginBtn b {
+    position: relative;
+    top: 4px;
+    font-size: 1.5vmax;
 }
