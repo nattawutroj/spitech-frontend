@@ -2,7 +2,6 @@ import React from "react";
 import NevBar from "./Components/NevBar";
 import News from "./Components/News";
 import axios from "../libs/Axios";
-import { set } from "react-hook-form";
 
 export const InfomationContext = React.createContext();
 
