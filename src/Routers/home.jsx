@@ -8,16 +8,15 @@ export const InfomationContext = React.createContext();
 const Home = () => {
     const [LoginStatus, setLoginStatus] = React.useState({ loginStatus: localStorage.getItem('loginStatus') || false })
     
-    async function fetchData() {
-        if (LoginStatus.loginStatus) {
-            const res = await axios.get('/checker/expired')
-            setLoginStatus({ loginStatus: true, ...res.data})
-        }
-    }
-
     React.useEffect(() => {
-        fetchData()
-    },[])
+        async function fetchData() {
+            if (LoginStatus.loginStatus) {
+                const res = await axios.get('/checker/expired')
+                setLoginStatus({ loginStatus: true, ...res.data })
+            }
+        }
+        fetchData();
+    }, [LoginStatus.loginStatus]);
 
     return (
         <InfomationContext.Provider value={{ LoginStatus, setLoginStatus }}>
