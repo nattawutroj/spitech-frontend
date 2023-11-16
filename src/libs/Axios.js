@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// const API_URL = 'https://spitech-backend.azurewebsites.net/';
+const API_URL = 'https://spitech-backend.azurewebsites.net/';
 
-const API_URL = 'http://192.168.1.103:3000';
+// const API_URL = 'http://192.168.1.103:3000';
 
 // สร้างอินสแตนซ์ Axios ทั่วโลกพร้อมการตั้งค่าเริ่มต้น
 const Axios = axios.create({
