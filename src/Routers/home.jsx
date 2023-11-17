@@ -2,7 +2,7 @@ import React from "react";
 import NevBar from "./Components/NevBar";
 import News from "./Components/News";
 import axios from "../libs/Axios";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Admintor from "./Components/Admintor";
 import Dashboard from "./Components/Dashboard";
 import Settings from "./Components/Settings";
@@ -28,7 +28,6 @@ const Home = () => {
         <InfomationContext.Provider value={{ LoginStatus, setLoginStatus }}>
             <div className="Home">
                 <NevBar />
-                <Router>
                     <Routes>
                         <Route path='/' element={<News />} />
                         <Route path='/admintor'>
@@ -38,7 +37,6 @@ const Home = () => {
                             <Route path='settings/name_titile' element={<Col4 api={"/resources/name_title"} header={"คำนำหน้าชื่อ"} command={"A2"} col1={["id_name_title","รหัส"]} col2={["name_title_th","ภาษาไทย"]} col3={["name_title_en","ภาษาอังกฤษ"]} />} />
                         </Route>
                     </Routes>
-                </Router>
             </div>
         </InfomationContext.Provider>
     )
