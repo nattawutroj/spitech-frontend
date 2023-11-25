@@ -1,0 +1,46 @@
+.Settings_Container {
+    width: 100%;
+    border-radius: 5px;
+    padding-top: 10%;
+    padding-left: 12%;
+    padding-right: 3%;
+    padding-bottom: 5px;
+}
+
+.Settings_Container a {
+    text-decoration: none;
+    color: black;
+}
+
+.Setting_Menu {
+    width: 13rem;
+    height: 13rem;
+    float: left;
+    margin-left: 13%;
+    margin-right: 5%;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    box-shadow: 2px 1px 5px 1px #ccc;
+    padding: 1%;
+    display: grid;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.Setting_Menu:hover {
+    border: 1px solid #ccc;
+    box-shadow: 2px 1px 5px 1px #ccc;
+}
+
+.Setting_Menu .title {
+    font-size: 1.3rem;
+    font-weight: 650;
+    margin-bottom: 0px;
+}
+
+.Setting_Menu .logo {
+    font-size: 3rem;
+    display: grid;
+    justify-items: center;
+}
