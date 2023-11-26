@@ -14,7 +14,6 @@ import {
     QueryClient,
     QueryClientProvider,
 } from '@tanstack/react-query';
-import LoadingButton from '@mui/lab/LoadingButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Axios from '../libs/Axios';
 import RouteUpload from './Upload';
@@ -219,9 +218,9 @@ const Example = () => {
                 <Grid>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                         <Tooltip title="Add User">
-                            <LoadingButton loading={loading} component="label" onClick={handleCreateUser} variant="contained" startIcon={<AddCircleIcon />}>
+                            <Botton component="label" onClick={handleCreateUser} variant="contained" startIcon={<AddCircleIcon />}>
                                 เพิ่มรายชื่อ
-                            </LoadingButton>
+                            </Botton>
                         </Tooltip>
                     </Box>
                 </Grid>
