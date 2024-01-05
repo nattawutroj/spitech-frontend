@@ -18,6 +18,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Axios from '../libs/Axios';
 import RouteUpload from './Upload';
 import { FormControl, MenuItem, Select } from '@mui/material';
+import Botton from '@mui/material/Button';
 
 const Example = () => {
     const [validationErrors, setValidationErrors] = useState({});
@@ -32,6 +33,11 @@ const Example = () => {
     const [Item, setItem] = useState('');
 
     const [Menu, setManu] = useState([]);
+
+    const [motion, setMotion] = useState('');
+    const [progress, setProgress] = useState(false);
+    
+
 
     const handleChange = (event) => {
         setItem(event.target.value);
@@ -57,9 +63,10 @@ const Example = () => {
     }, [rowSelection]);
 
     const handleCreateUser = () => {
-
         if (Item !== '') {
-            setLoading(true);
+            setLoading(true)
+            setMotion('Waitng.')
+            setProgress(true)
             var predata = []
             const trueKey = Object.keys(rowSelection);
             trueKey.forEach(element => {
@@ -71,6 +78,7 @@ const Example = () => {
             });
             var updata = []
             predata.forEach(item => {
+                setMotion("Waitng..")
                 var data = {
                     course_code: Item,
                     student_code: item[1],
@@ -80,6 +88,7 @@ const Example = () => {
                     status: true
                 }
                 updata.push(data)
+                setMotion("Waitng...")
             })
             Axios.post('/resources/admin/student/grops', updata)
                 .then(res => {
@@ -185,12 +194,6 @@ const Example = () => {
         [validationErrors],
     );
 
-    //call READ hook
-    const {
-        isError: isLoadingUsersError,
-        isFetching: isFetchingUsers,
-        isLoading: isLoadingUsers,
-    } = useGetUsers();
 
     const table = useMaterialReactTable({
         columns,
@@ -198,12 +201,6 @@ const Example = () => {
         createDisplayMode: 'modal', //default ('row', and 'custom' are also available)
         editDisplayMode: 'modal', //default ('row', 'cell', 'table', and 'custom' are also available)
         getRowId: (row) => row[1],
-        muiToolbarAlertBannerProps: isLoadingUsersError
-            ? {
-                color: 'error',
-                children: 'Error loading data',
-            }
-            : undefined,
         muiTableContainerProps: {
             sx: {
                 minHeight: '100%',
@@ -218,8 +215,8 @@ const Example = () => {
                 <Grid>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                         <Tooltip title="Add User">
-                            <Botton component="label" onClick={handleCreateUser} variant="contained" startIcon={<AddCircleIcon />}>
-                                เพิ่มรายชื่อ
+                            <Botton component="label" disabled={loading} onClick={handleCreateUser} variant="contained" startIcon={<AddCircleIcon />}>
+                                {!progress?'เพิ่มรายชื่อ': motion}
                             </Botton>
                         </Tooltip>
                     </Box>
@@ -246,9 +243,6 @@ const Example = () => {
         onRowSelectionChange: setRowSelection, //connect internal row selection state to your own
         initialState: { density: 'compact', pagination: { pageSize: 100 } },
         state: {
-            isLoading: isLoadingUsers,
-            showAlertBanner: isLoadingUsersError,
-            showProgressBars: isFetchingUsers,
             rowSelection,
         },
     });
@@ -257,11 +251,6 @@ const Example = () => {
         <MaterialReactTable table={table} />
     )
 };
-
-//READ hook (get users from api)
-function useGetUsers() {
-
-}
 
 const queryClient = new QueryClient();
 

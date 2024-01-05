@@ -23,7 +23,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Axios from '../libs/Axios';
 
 const Example = () => {
-    const [setValidationErrors] = useState({});
+    // const [setValidationErrors] = useState({});
 
 
 
@@ -299,9 +299,9 @@ const Example = () => {
                 minHeight: '500px',
             },
         },
-        onCreatingRowCancel: () => setValidationErrors({}),
+        // onCreatingRowCancel: () => setValidationErrors({}),
         onCreatingRowSave: handleCreateUser,
-        onEditingRowCancel: () => setValidationErrors({}),
+        // onEditingRowCancel: () => setValidationErrors({}),
         onEditingRowSave: handleSaveUser,
         //optionally customize modal content
         renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
