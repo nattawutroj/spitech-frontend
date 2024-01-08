@@ -4,6 +4,7 @@ import { Box, Button, CssBaseline, Modal, Stack, TextField } from "@mui/material
 import { Add } from "@mui/icons-material";
 import axios from "../libs/Axios";
 import Accord from "./Accord";
+import ProjectCard from "./ProjectCard";
 
 export default function ProjectDash() {
     const profile = React.useContext(ProfileContext);
@@ -122,18 +123,40 @@ export default function ProjectDash() {
         })
     }
 
+    const [addProjectBtn, setAddProjectBtn] = React.useState(true);
+    const [projectinfo, setProjectinfo] = React.useState([{}]);
+    React.useEffect(() => {
+        axios.get('/user/projectinfo').then((res) => {
+            console.log(res);
+            if (res.data.status == 200) {
+                setProjectinfo(res.data.result);
+                setAddProjectBtn(false);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }, [])
+
     return (
         <React.Fragment>
             <CssBaseline />
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<Add />}
-                sx={{ mt: 2 }}
-                onClick={handleOpen}
-            >
-                Add Project
-            </Button>
+            {
+                addProjectBtn
+                    ?
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<Add />}
+                        sx={{ mt: 2 }}
+                        onClick={handleOpen}
+                        disabled={addProjectBtn}
+                        hidden={addProjectBtn}
+                    >
+                        Add Project
+                    </Button>
+                    :
+                    <ProjectCard projectinfo={projectinfo} />
+            }
             <Modal
                 open={open}
                 onClose={handleClose}
