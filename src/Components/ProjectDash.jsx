@@ -127,10 +127,14 @@ export default function ProjectDash() {
     const [projectinfo, setProjectinfo] = React.useState([{}]);
     React.useEffect(() => {
         axios.get('/user/projectinfo').then((res) => {
+            console.log("res");
             console.log(res);
             if (res.data.status == 200) {
+                if(res.data.result.length != 0){
                 setProjectinfo(res.data.result);
+                console.log("addProjectBtn");
                 setAddProjectBtn(false);
+                }
             }
         }).catch((err) => {
             console.log(err);
@@ -141,6 +145,8 @@ export default function ProjectDash() {
         <React.Fragment>
             <CssBaseline />
             {
+                console.log(addProjectBtn)
+            }{
                 addProjectBtn
                     ?
                     <Button
@@ -149,8 +155,8 @@ export default function ProjectDash() {
                         startIcon={<Add />}
                         sx={{ mt: 2 }}
                         onClick={handleOpen}
-                        disabled={addProjectBtn}
-                        hidden={addProjectBtn}
+                        disabled={!addProjectBtn}
+                        hidden={!addProjectBtn}
                     >
                         Add Project
                     </Button>
