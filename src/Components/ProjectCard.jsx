@@ -6,6 +6,11 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Button, Card, Stack } from '@mui/material';
 import { Edit, Home } from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import CheckIcon from '@mui/icons-material/Check';
+import Add from '@mui/icons-material/Add';
 import axios from '../libs/Axios';
 
 export default function ProjectCard({ projectinfo }) {
@@ -117,6 +122,7 @@ export default function ProjectCard({ projectinfo }) {
                                     </Stack>
                                 </Stack>
                             </Card>
+                            <Button sx={{ mt: 2.5, mb: 1 }} variant='contained' color='primary' startIcon={<Add />}>เพิ่มที่ปรึกษา</Button>
                             <Card sx={{ p: 1 }}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
@@ -129,9 +135,9 @@ export default function ProjectCard({ projectinfo }) {
                                                 data.staff.map((data2, index2) => (
                                                     console.log(data2),
                                                     console.log(index2),
-                                                    (data2.id_project === item.id_project) ?
-                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}</Typography>
-                                                        : (index2 == 0) ? 'ไม่มีที่ปรึกษา' : ''
+                                                    (data2.id_project === item.id_project && data2.id_project_staff_position === 1) ?
+                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                        : (index2 == 0) ? <Typography sx={{color:'red'}}>ไม่มีที่ปรึกษา</Typography>  : ''
                                                 ))
                                             ))
                                         }
@@ -143,20 +149,38 @@ export default function ProjectCard({ projectinfo }) {
                                 id="panel1a-header"
                             >
                                 <Stack direction="row" spacing={0}>
-                                    <Typography sx={{ mt: 0.3, width: '33%', flexShrink: 0 }}>ที่ปรึกษาร่วม</Typography>
+                                    <Typography sx={{ mt: 0.3, width: '33%', flexShrink: 0 }}>ที่ปรึกษาร่วม </Typography>
                                     <Stack direction="column" spacing={0}>
                                         {
                                             staff.map((data) => (
+                                                data.staff.map((data2, index2) => (
+                                                    (data2.id_project === item.id_project && data2.id_project_staff_position === 4) ?
+                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                        : ''
+                                                ))
+                                            ))
+                                        }
+                                        {
+                                            staff.map((data) => (
                                                 data.os_staff.map((data2, index2) => (
-                                                    (data2.id_project === item.id_project) ?
-                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}</Typography>
-                                                        : (index2 == 0) ? 'ไม่มีที่ปรึกษาร่วม' : ''
+                                                    (data2.id_project === item.id_project && data2.id_project_staff_position === 4) ?
+                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                        : ''
                                                 ))
                                             ))
                                         }
                                     </Stack>
                                 </Stack>
                             </Card>
+                            {/* btn confirm and remove Project right alin */}
+                            <Stack direction="row"
+                                justifyContent="flex-end"
+                                alignItems="center"
+                                spacing={2} sx={{ mt: 2.5 }}>
+                                <Button variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                <Button variant='contained' color='error' startIcon={<DeleteIcon />}>ลบโครงงาน</Button>
+                            </Stack>
+
                         </AccordionDetails>
                     </Accordion>
                 </div>
