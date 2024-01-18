@@ -4,7 +4,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Button, Card, Stack } from '@mui/material';
+import { Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
 import { Edit, Home } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,6 +14,13 @@ import Add from '@mui/icons-material/Add';
 import axios from '../libs/Axios';
 
 export default function ProjectCard({ projectinfo }) {
+
+
+    const [dialog, setDialog] = React.useState(false);
+    const [dialogstaff, setDialogStaff] = React.useState(false);
+    const [deldatastaffos, setDeldatastaffos] = React.useState();
+    const [dialogdelProject, setdialogDelProject] = React.useState(false);
+    const [noone, setNoone] = React.useState(false);
 
     const [member, setMember] = React.useState([]);
     const [staff, setStaff] = React.useState([]);
@@ -32,6 +39,19 @@ export default function ProjectCard({ projectinfo }) {
         // console.log(flattenedResult)
         // setStaff(flattenedResult);
     };
+
+    const handleCloseDel = () => {
+        setDialog(false);
+    };
+
+    function AlertDialog(data2) {
+        setDialog(true),
+            setDeldatastaffos(data2.id_project_os_staff)
+    }
+
+    function confimdel() {
+        delstaffos(deldatastaffos)
+    }
 
     React.useEffect(() => {
         fetchData();
@@ -65,13 +85,84 @@ export default function ProjectCard({ projectinfo }) {
         }
     }
 
+    const delstaffos = async (item) => {
+        try {
+            await axios.delete('/user/staffos', {
+                data: {
+                    id_project_os_staff: item
+                }
+            });
+            setDialog(false)
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const delstaff = async (item) => {
+        try {
+            await axios.delete('/user/projectstaff', {
+                data: {
+                    id_project_staff: item
+                }
+            });
+            setDialogStaff(false)
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    const handleCloseDelStaff = () => {
+        setDialogStaff(false);
+    };
+
+    function AlertDialogStaff(data2) {
+        setDialogStaff(true),
+            setDeldatastaffos(data2.id_project_staff)
+    }
+
+    function confimdelStaff() {
+        delstaff(deldatastaffos)
+    }
+    const delProject = async (item) => {
+        try {
+            await axios.delete('/user/join', {
+                data: {
+                    params: {
+                        id_project: item
+                    }
+                }
+            });
+            setDialogStaff(false)
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    const handleCloseDelProject = () => {
+        setdialogDelProject(false);
+    };
+
+    function AlertDialogProject(data2) {
+        setdialogDelProject(true),
+            setDeldatastaffos(data2.id_project)
+    }
+
+    function confimdelProject() {
+        delProject(deldatastaffos)
+    }
+
     return (
         <React.Fragment>
             {console.log(staff)}
             {projectinfo.map((item, index) => (
                 <div className="card" key={index}>
                     {console.log(item)}
-                    <Accordion sx={{ mt: 1 }} defaultExpanded>
+                    <Accordion key={index} sx={{ mt: 1 }} defaultExpanded>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
@@ -131,16 +222,33 @@ export default function ProjectCard({ projectinfo }) {
                                     <Typography sx={{ mt: 0.3, width: '33%', flexShrink: 0 }}>ที่ปรึกษา</Typography>
                                     <Stack direction="column" spacing={0}>
                                         {
-                                            staff.map((data) => (
-                                                data.staff.map((data2, index2) => (
-                                                    console.log(data2),
-                                                    console.log(index2),
-                                                    (data2.id_project === item.id_project && data2.id_project_staff_position === 1) ?
-                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
-                                                        : (index2 == 0) ? <Typography sx={{color:'red'}}>ไม่มีที่ปรึกษา</Typography>  : ''
-                                                ))
-                                            ))
+                                            staff.map((data, index) => {
+                                                // Use a variable to conditionally render the "ไม่มีที่ปรึกษา" message
+                                                let adviserContent = null;
+
+                                                data.staff.map((data2, index2) => {
+
+                                                    if (data2.id_project === item.id_project && data2.id_project_staff_position === 1) {
+                                                        adviserContent = (
+                                                            <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>
+                                                                {data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}
+                                                                <IconButton onClick={() => { AlertDialogStaff(data2) }} sx={{ pb: 1.2 }} aria-label="delete">
+                                                                    <DeleteIcon color="error" fontSize="small" />
+                                                                </IconButton>
+                                                            </Typography>
+                                                        );
+                                                    }
+                                                });
+
+                                                // Render the content for each staff member
+                                                return (
+                                                    <div key={index}>
+                                                        {adviserContent ? adviserContent : <Typography sx={{ color: 'red' }} key={index}>ไม่มีที่ปรึกษา</Typography>}
+                                                    </div>
+                                                );
+                                            })
                                         }
+
                                     </Stack>
                                 </Stack>
                             </Card>
@@ -155,7 +263,7 @@ export default function ProjectCard({ projectinfo }) {
                                             staff.map((data) => (
                                                 data.staff.map((data2, index2) => (
                                                     (data2.id_project === item.id_project && data2.id_project_staff_position === 4) ?
-                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { AlertDialogStaff(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
                                                         : ''
                                                 ))
                                             ))
@@ -164,7 +272,7 @@ export default function ProjectCard({ projectinfo }) {
                                             staff.map((data) => (
                                                 data.os_staff.map((data2, index2) => (
                                                     (data2.id_project === item.id_project && data2.id_project_staff_position === 4) ?
-                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { AlertDialog(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
                                                         : ''
                                                 ))
                                             ))
@@ -172,19 +280,82 @@ export default function ProjectCard({ projectinfo }) {
                                     </Stack>
                                 </Stack>
                             </Card>
-                            {/* btn confirm and remove Project right alin */}
                             <Stack direction="row"
                                 justifyContent="flex-end"
                                 alignItems="center"
                                 spacing={2} sx={{ mt: 2.5 }}>
-                                <Button variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
-                                <Button variant='contained' color='error' startIcon={<DeleteIcon />}>ลบโครงงาน</Button>
+                                {/* if data.staff มีแล้ว ให้ disable เป็น false */}
+                                <Button disabled={staff.length > 0} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                <Button onClick={() => { AlertDialogProject(item) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ลบโครงงาน</Button>
                             </Stack>
 
                         </AccordionDetails>
                     </Accordion>
                 </div>
             ))}
+            <Dialog
+                open={dialog}
+                onClose={handleCloseDel}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Remove"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        ยืนยันต้องการลบข้อมูลนี้หรือไม่
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDel}>ยกเลิก</Button>
+                    <Button onClick={confimdel} autoFocus>
+                        ยืนยัน
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={dialogstaff}
+                onClose={handleCloseDelStaff}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Remove"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        ยืนยันต้องการลบข้อมูลนี้หรือไม่
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDelStaff}>ยกเลิก</Button>
+                    <Button onClick={confimdelStaff} autoFocus>
+                        ยืนยัน
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={dialogdelProject}
+                onClose={handleCloseDelProject}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Remove"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        ยืนยันต้องการลบข้อมูลนี้หรือไม่
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDelProject}>ยกเลิก</Button>
+                    <Button onClick={confimdelProject} autoFocus>
+                        ยืนยัน
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     )
 }
