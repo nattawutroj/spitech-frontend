@@ -20,6 +20,7 @@ import Axios from './libs/Axios';
 import RouteStdGrops from './Components/StdGrops';
 import RouteStudent from './Components/TableStuden'
 import RouteTeacher from './Components/TableTeaher'
+import ProjectDash from './Components/ProjectDash';
 
 
 
@@ -117,7 +118,7 @@ export default function Dashboard() {
                                 <Route path="add/teacher" element={<RouteTeacher />} />
                                 <Route path="add/student" element={<RouteStudent />} />
                                 <Route path="add/studentgrops" element={<RouteStdGrops />} />
-                                <Route path='*' element={<h1>Not Found 404</h1>} />
+                                <Route path='*' element={<ProjectDash />} />
                             </Routes>
                         </Container>
                     </Box>
