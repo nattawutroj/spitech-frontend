@@ -128,6 +128,16 @@ export default function ProjectCard({ projectinfo }) {
         }
     }
 
+    const btninitalcomfirm = async (item) => {
+        try {
+            await axios.put('/user/initalcomfirm', {
+                id_project_status: item
+            });
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleCloseDelStaff = () => {
         setDialogStaff(false);
@@ -298,7 +308,7 @@ export default function ProjectCard({ projectinfo }) {
                                 justifyContent="flex-end"
                                 alignItems="center"
                                 spacing={2} sx={{ mt: 2.5 }}>
-                                <Button disabled={adviserContent == null} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                <Button onClick={() => {btninitalcomfirm(item.id_project_status)}} disabled={adviserContent == null} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
                                 <Button onClick={() => { AlertDialogProject(item) }} variant='contained' color='error' startIcon={<DeleteIcon />}>{countStd > 1 ? 'ออกจากโครงงาน' : 'ลบโครงงาน'}</Button>
                             </Stack>
 

@@ -5,6 +5,7 @@ import { Add } from "@mui/icons-material";
 import axios from "../libs/Axios";
 import Accord from "./Accord";
 import ProjectCard from "./ProjectCard";
+import ProjectStudentHome from "./ProjectStudentHome";
 
 export default function ProjectDash() {
     const profile = React.useContext(ProfileContext);
@@ -130,10 +131,10 @@ export default function ProjectDash() {
             console.log("res");
             console.log(res);
             if (res.data.status == 200) {
-                if(res.data.result.length != 0){
-                setProjectinfo(res.data.result);
-                console.log("addProjectBtn");
-                setAddProjectBtn(false);
+                if (res.data.result.length != 0) {
+                    setProjectinfo(res.data.result);
+                    console.log("addProjectBtn");
+                    setAddProjectBtn(false);
                 }
             }
         }).catch((err) => {
@@ -145,7 +146,7 @@ export default function ProjectDash() {
         <React.Fragment>
             <CssBaseline />
             {
-                console.log(addProjectBtn)
+                console.log(projectinfo)
             }{
                 addProjectBtn
                     ?
@@ -161,7 +162,11 @@ export default function ProjectDash() {
                         Add Project
                     </Button>
                     :
-                    <ProjectCard projectinfo={projectinfo} />
+                    projectinfo[0].id_project_status_title == 0
+                        ?
+                        < ProjectCard projectinfo={projectinfo} />
+                        :
+                        <ProjectStudentHome projectinfo={projectinfo} />
             }
             <Modal
                 open={open}
