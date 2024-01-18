@@ -377,7 +377,7 @@ export default function ProjectCard({ projectinfo }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{ ...style, width: 400 }}>
+                <Box sx={{ ...style, width: 450 }}>
                     <ModalAddStaff setOpenAddStaff={setOpenAddStaff} projectcode={projectcode} />
                 </Box>
             </Modal>
