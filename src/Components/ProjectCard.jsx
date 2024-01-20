@@ -8,25 +8,28 @@ import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentT
 import { Edit, Home } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import CheckIcon from '@mui/icons-material/Check';
 import Add from '@mui/icons-material/Add';
 import axios from '../libs/Axios';
 import ModalAddStaff from './ModalAddStaff';
+import { TextField } from '@mui/material';
 
-export default function ProjectCard({ projectinfo }) {
-
+export default function ProjectCard({ projectinfo,editMode,setEditMode }) {
 
     const [dialog, setDialog] = React.useState(false);
     const [dialogstaff, setDialogStaff] = React.useState(false);
     const [deldatastaffos, setDeldatastaffos] = React.useState();
     const [dialogdelProject, setdialogDelProject] = React.useState(false);
-
+    const [errAlert, setErrAlert] = React.useState(false);
+    const [project_title_th, setProject_title_th] = React.useState(projectinfo[0].project_title_th);
+    const [project_title_en, setProject_title_en] = React.useState(projectinfo[0].project_title_en);
+    const [project_study_title_th, setProject_study_title_th] = React.useState(projectinfo[0].case_study_title_th);
+    const [project_study_title_en, setProject_study_title_en] = React.useState(projectinfo[0].case_study_title_en);
     const [openAddStaff, setOpenAddStaff] = React.useState(false);
 
     const [member, setMember] = React.useState([]);
     const [staff, setStaff] = React.useState([]);
-    const [staffos, setStaffos] = React.useState([]);
+    const [openBuild, setOpenBuild] = React.useState(false);
 
     const [projectcode, setProjectcode] = React.useState();
     let adviserContent = null;
@@ -58,6 +61,31 @@ export default function ProjectCard({ projectinfo }) {
         fetchData();
         fetchStaff();
     }, [projectinfo]);
+
+    const handleCloseBuild = () => {
+        setOpenBuild(false);
+    };
+
+    const submitBuild = async (e) => {
+        e.preventDefault();
+        if (project_title_th === '' || project_title_en === '') {
+            setErrAlert(true)
+        } else {
+            try {
+                await axios.put('/user/build', {
+                    id_project: projectinfo[0].id_project,
+                    project_title_th: project_title_th,
+                    project_title_en: project_title_en,
+                    case_study_title_th: project_study_title_th,
+                    case_study_title_en: project_study_title_en
+                });
+                setOpenBuild(false);
+                window.location.reload();
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
 
     const search = async (item) => {
         try {
@@ -129,13 +157,18 @@ export default function ProjectCard({ projectinfo }) {
     }
 
     const btninitalcomfirm = async (item) => {
-        try {
-            await axios.put('/user/initalcomfirm', {
-                id_project_status: item
-            });
-            window.location.reload();
-        } catch (error) {
-            console.log(error);
+        if (editMode == 1) {
+            setEditMode(0)
+        }
+        else {
+            try {
+                await axios.put('/user/initalcomfirm', {
+                    id_project_status: item
+                });
+                window.location.reload();
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -196,6 +229,14 @@ export default function ProjectCard({ projectinfo }) {
                             <Home sx={{ mr: 1 }} /><Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>{'   ' + item.id_project}</Typography>
                             <Typography sx={{ pt: 0.3, color: 'text.secondary' }}>{item.project_status_name_title}</Typography>
                         </AccordionSummary>
+                        <Stack direction="row"
+                            justifyContent="flex-end"
+                            alignItems="center"
+                            spacing={2} sx={{ mr: 2.5 }}>
+                            <Button onClick={() => { setOpenBuild(true) }} variant="outlined" href="#outlined-buttons">
+                                <Edit />
+                            </Button>
+                        </Stack>
                         <AccordionDetails>
                             <Card sx={{ p: 1 }}
                                 aria-controls="panel1a-content"
@@ -308,7 +349,7 @@ export default function ProjectCard({ projectinfo }) {
                                 justifyContent="flex-end"
                                 alignItems="center"
                                 spacing={2} sx={{ mt: 2.5 }}>
-                                <Button onClick={() => {btninitalcomfirm(item.id_project_status)}} disabled={adviserContent == null} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                <Button onClick={() => { btninitalcomfirm(item.id_project_status) }} disabled={adviserContent == null} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
                                 <Button onClick={() => { AlertDialogProject(item) }} variant='contained' color='error' startIcon={<DeleteIcon />}>{countStd > 1 ? 'ออกจากโครงงาน' : 'ลบโครงงาน'}</Button>
                             </Stack>
 
@@ -368,7 +409,7 @@ export default function ProjectCard({ projectinfo }) {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                    ยืนยันต้องการออกจากโครงงานนี้หรือไม่
+                        ยืนยันต้องการออกจากโครงงานนี้หรือไม่
                     </DialogContentText>
                     <h4>*หากโครงงานไม่มีสมาชิกอื่นๆ โครงงานจะถูกลบออกจากระบบ</h4>
 
@@ -389,6 +430,72 @@ export default function ProjectCard({ projectinfo }) {
             >
                 <Box sx={{ ...style, width: 450 }}>
                     <ModalAddStaff setOpenAddStaff={setOpenAddStaff} projectcode={projectcode} />
+                </Box>
+            </Modal>
+            <Modal
+                open={openBuild}
+                onClose={handleCloseBuild}
+                aria-labelledby="parent-modal-title"
+                aria-describedby="parent-modal-description"
+            >
+                <Box sx={{ ...style, width: 400 }}>
+                    <h2 id="parent-modal-title">Edit Your Project</h2>
+                    <Box component="form" noValidate onSubmit={submitBuild} sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="project_title_th"
+                            label="ชื่อโปรเจ็คภาษาไทย"
+                            name="project_title_th"
+                            autoFocus
+                            value={project_title_th}
+                            onChange={(e) => { setProject_title_th(e.target.value) }}
+                            error={errAlert}
+                            helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="project_title_en"
+                            label="ชื่อโปรเจ็คภาษาอังกฤษ"
+                            name="project_title_en"
+                            autoFocus
+                            value={project_title_en}
+                            onChange={(e) => { setProject_title_en(e.target.value) }}
+                            error={errAlert}
+                            helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="project_study_title_th"
+                            label="แหล่งกรณีศึกษาภาษาไทย"
+                            name="project_study_title_th"
+                            autoFocus
+                            value={project_study_title_th}
+                            onChange={(e) => { setProject_study_title_th(e.target.value) }}
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="project_study_title_en"
+                            label="แหล่งกรณีศึกษาภาษาอังกฤษ"
+                            name="project_study_title_en"
+                            autoFocus
+                            value={project_study_title_en}
+                            onChange={(e) => { setProject_study_title_en(e.target.value) }}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Create
+                        </Button>
+                    </Box>
                 </Box>
             </Modal>
         </React.Fragment>
