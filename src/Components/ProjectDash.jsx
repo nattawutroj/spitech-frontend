@@ -46,7 +46,7 @@ export default function ProjectDash() {
         const project_title_en = e.target.project_title_en.value;
         const project_study_title_th = e.target.project_study_title_th.value;
         const project_study_title_en = e.target.project_study_title_en.value;
-        if (project_title_th == '' || project_title_en == '' || project_study_title_th == '' || project_study_title_en == '') {
+        if (project_title_th == '' || project_title_en == '') {
             setErrAlert(true);
             return;
         }
@@ -219,25 +219,19 @@ export default function ProjectDash() {
                         />
                         <TextField
                             margin="normal"
-                            required
                             fullWidth
                             id="project_study_title_th"
                             label="แหล่งกรณีศึกษาภาษาไทย"
                             name="project_study_title_th"
                             autoFocus
-                            error={errAlert}
-                            helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
                         />
                         <TextField
                             margin="normal"
-                            required
                             fullWidth
                             id="project_study_title_en"
                             label="แหล่งกรณีศึกษาภาษาอังกฤษ"
                             name="project_study_title_en"
                             autoFocus
-                            error={errAlert}
-                            helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
                         />
                         <Button
                             type="submit"
