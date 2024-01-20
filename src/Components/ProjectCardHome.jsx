@@ -4,9 +4,10 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {Button, Card, Stack } from '@mui/material';
+import { Button, Card, Stack } from '@mui/material';
 import { Edit, Home } from '@mui/icons-material';
 import axios from '../libs/Axios';
+import FileSending from './SubComponets/FileSending';
 
 export default function ProjectCard({ projectinfo, setEditMode }) {
     const [member, setMember] = React.useState([]);
@@ -59,7 +60,7 @@ export default function ProjectCard({ projectinfo, setEditMode }) {
             {projectinfo.map((item, index) => (
                 <div className="card" key={index}>
                     {console.log(item)}
-                    <Accordion key={index} sx={{ mt: 1 }}>
+                    <Accordion key={index} sx={{ mt: 1 }} defaultExpanded>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
@@ -69,11 +70,11 @@ export default function ProjectCard({ projectinfo, setEditMode }) {
                             <Typography sx={{ pt: 0.3, color: 'text.secondary' }}>{item.project_status_name_title}</Typography>
                         </AccordionSummary>
                         <Stack direction="row"
-                                justifyContent="flex-end"
-                                alignItems="center"
-                                spacing={0} sx={{ mt: 1,mb:1,mr:2 }}>
-                                <Button onClick={() => { setEditMode(1) }} variant='outlined' color='primary' startIcon={<Edit sx={{ml:1.4}}/>}></Button>
-                            </Stack>
+                            justifyContent="flex-end"
+                            alignItems="center"
+                            spacing={0} sx={{ mt: 1, mb: 1, mr: 2 }}>
+                            <Button onClick={() => { setEditMode(1) }} variant='outlined' color='primary' startIcon={<Edit sx={{ ml: 1.4 }} />}></Button>
+                        </Stack>
                         <AccordionDetails>
                             <Card sx={{ p: 1 }}
                                 aria-controls="panel1a-content"
@@ -179,6 +180,10 @@ export default function ProjectCard({ projectinfo, setEditMode }) {
                                 </Stack>
                             </Card>
                         </AccordionDetails>
+                        {
+                            <FileSending text={"ส่งไฟล์ ทก.01"} itemprojectinfo={item} id_project={item.id_project} />
+
+                        }
                     </Accordion>
                 </div>
             ))}
