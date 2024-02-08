@@ -95,7 +95,7 @@ export default function AddressForm({ profile, setProfile, editProfileAlert }) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Shipping address
+        ข้อมูลนักศึกษา
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
