@@ -8,6 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Button, Stack } from '@mui/material';
 import axios from "../../libs/Axios";
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
 
 dayjs.extend(isBetweenPlugin);
 
@@ -54,6 +55,7 @@ export default function WeekPicker({ ajid }) {
     const [idroom, setIdroom] = React.useState(-1);
     const [room, setRoom] = React.useState([]);
     const [slotall, setSlotAll] = React.useState(null);
+    const [isLoaded, setIsLoaded] = React.useState(false);
 
     const fetchRoom = () => {
         axios.get('/resources/admin/room')
@@ -122,6 +124,7 @@ export default function WeekPicker({ ajid }) {
                 <Button
                     sx={{ mr: 1, ml: 1, width: '30%' }}
                     onClick={() => {
+                        setIsLoaded(true);
                         axios.get('/resources/admin/room/handle', {
                             params: {
                                 id_project: ajid,
@@ -163,6 +166,7 @@ export default function WeekPicker({ ajid }) {
             <div>
                 <p>เริ่ม: {startOfWeek.format('DD/MM/YYYY')} - สิ้นสุด: {endOfWeek.format('DD/MM/YYYY')}</p>
             </div>
+            {slotall? 
             <div>
                 <table border={0}>
                     <thead>
@@ -217,6 +221,11 @@ export default function WeekPicker({ ajid }) {
 
                 </table>
             </div>
+            : 
+            <div>
+                {isLoaded ? <LinearProgress /> : null}
+            </div>
+            }
         </>
     );
 }
