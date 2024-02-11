@@ -672,8 +672,8 @@ export default function AdminDash() {
             </Modal>
 
             <Modal open={openCalander} onClose={() => { setOpenCalander(false) }}>
-                <Box sx={{ ...style, width: 400 }}>
-                    <Calander />
+                <Box sx={{ ...style, width: 'auto' }}>
+                    <Calander ajid={ajid} />
                 </Box>
             </Modal>
 
