@@ -94,6 +94,8 @@ export default function AdminDash() {
     const [staff, setStaff] = React.useState([]);
     const [ajid, setAjid] = React.useState('');
     const [act, setAct] = React.useState(0);
+    const [idprojectstatustitle, setIdprojectstatustitle] = React.useState('');
+    const [btnsc, setBtnsc] = React.useState(false);
 
     let adviserContent = null;
 
@@ -313,7 +315,6 @@ export default function AdminDash() {
         }
     }
 
-
     return (
         <>
             <FormControl sx={{ m: 1, mt: 2, minWidth: 120 }} size="small">
@@ -526,14 +527,32 @@ export default function AdminDash() {
                                         </Stack>
                                         <ProjectDetail act={act} id={file.id_project} />
 
-                                        <Button onClick={() => { setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>จัดตารางสอบ</Button>
+                                        <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>จัดตารางสอบ</Button>
                                         {
                                             <AccordionDetails >
                                                 <Stack direction="row"
                                                     justifyContent="flex-end"
                                                     alignItems="center"
                                                     spacing={2} sx={{ mt: 2.5 }}>
-                                                    <Button onClick={() => { handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status) }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                    <Button
+                                                        onClick={() => { axios.get('/resources/admin/room/schedule', {
+                                                            params: {
+                                                                id_project: ajid,
+                                                                id_project_status_title: idprojectstatustitle
+                                                            }
+                                                        })
+                                                            .then(res => {
+                                                                console.log(res.data.result.length)
+                                                                if (res.data.result.length === 0) {
+                                                                    window.alert("คุณยังไม่ได้จัดตารางสอบ")
+                                                                } else {
+                                                                    // ถ้ามีข้อมูล
+                                                                    handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status)
+                                                                }
+                                                            })
+                                                            .catch(err => {
+                                                                console.log(err);
+                                                            });  }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
                                                     <Button onClick={() => { handlereportCancel(file.fileLastUpdate.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
                                                 </Stack>
 
@@ -651,7 +670,7 @@ export default function AdminDash() {
                                     staff.map((data) => (
                                         data.staff.map((data2, index2) => (
                                             (data2.id_project === ajid && data2.id_project_staff_position === 3) ?
-                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff),console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff), console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
                                                 : ''
                                         ))
                                     ))
@@ -660,7 +679,7 @@ export default function AdminDash() {
                                     staff.map((data) => (
                                         data.os_staff.map((data2, index2) => (
                                             (data2.id_project === ajid && data2.id_project_staff_position === 3) ?
-                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff),console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff), console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
                                                 : ''
                                         ))
                                     ))
@@ -673,7 +692,7 @@ export default function AdminDash() {
 
             <Modal open={openCalander} onClose={() => { setOpenCalander(false) }}>
                 <Box sx={{ ...style, width: 'auto' }}>
-                    <Calander ajid={ajid} />
+                    <Calander idprojectstatustitle={idprojectstatustitle} ajid={ajid} />
                 </Box>
             </Modal>
 
