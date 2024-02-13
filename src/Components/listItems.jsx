@@ -2,14 +2,12 @@ import * as React from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 
-import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
+import { PausePresentation } from '@mui/icons-material';
 
 
 export const mainListItems = (
@@ -20,9 +18,9 @@ export const mainListItems = (
             </ListItemIcon>
             <ListItemText primary="แดชบอร์ด" />
         </ListItemButton>
-        <ListItemButton href='/dashboard'>
+        <ListItemButton href='/dashboard/record'>
             <ListItemIcon>
-                <ShoppingCartIcon />
+                <PausePresentation />
             </ListItemIcon>
             <ListItemText primary="โปรเจ็คทั้งหทด" />
         </ListItemButton>

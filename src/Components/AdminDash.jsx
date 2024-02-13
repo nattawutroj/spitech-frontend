@@ -7,7 +7,7 @@ import { Typography } from "@mui/material";
 import { Stack } from "@mui/material";
 import { Card } from "@mui/material";
 import { Button } from "@mui/material";
-import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
+import { CloudUpload as CloudUploadIcon, Print } from "@mui/icons-material";
 import { green, red } from "@mui/material/colors";
 import { orange } from "@mui/material/colors";
 import { ZoomIn } from "@mui/icons-material";
@@ -26,6 +26,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Calander from "./SubComponets/Calander";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 
 export default function AdminDash() {
 
@@ -84,6 +88,7 @@ export default function AdminDash() {
     const [fileList, setFileList] = React.useState([]);
     const [projectProcess, setProjectProcess] = React.useState([]);
     const [projectProcessWaitSchdule, setProjectProcessWaitSchdule] = React.useState([]);
+    const [projectProcessWaitRecord, setProjetProcessWaitRecord] = React.useState([]);
     const [expanded, setExpanded] = React.useState(false);
     const [openCancel, setOpenCancel] = React.useState(false);
     const [Canceldatafrom, setCanceldatafrom] = React.useState([]);
@@ -95,9 +100,13 @@ export default function AdminDash() {
     const [ajid, setAjid] = React.useState('');
     const [act, setAct] = React.useState(0);
     const [idprojectstatustitle, setIdprojectstatustitle] = React.useState('');
-    const [btnsc, setBtnsc] = React.useState(false);
-
-    let adviserContent = null;
+    const [modalRecord, setmodalRecord] = React.useState(false);
+    const [examrecord, setExamrecord] = React.useState('');
+    const [examrecordcomment, setExamrecordcomment] = React.useState('');
+    const [a1, setA1] = React.useState('');
+    const [a2, setA2] = React.useState('');
+    const [a3, setA3] = React.useState('');
+    const [a4, setA4] = React.useState('');
 
     React.useEffect(() => {
         axios.get('/resources/admin/projectinfomation/staff',
@@ -148,6 +157,31 @@ export default function AdminDash() {
         }
         );
     };
+
+    const cfrecordexam = () => {
+        var x = 0;
+        if (idprojectstatustitle == 6) {
+            x = 1;
+        }
+        if (examrecord == 'ผ่าน') {
+            handlereportConfirmUNC(a1, a2, a3, a4)
+        }
+        else if (examrecord == 'ไม่ผ่าน') {
+            handleCancelcommentUNC(a1, examrecordcomment, a3, a4)
+        }
+        axios.post('/resources/admin/recordexam',
+            {
+                id_project: ajid,
+                id_test_category: x,
+                status_exam: examrecord,
+                comment_exam: examrecordcomment
+            }
+        ).then((response) => {
+            console.log(response.data)
+            window.location.reload();
+        });
+    }
+
 
     const Fetchreqreport = () => {
         axios.get('resources/admin/reqreport',
@@ -256,6 +290,52 @@ export default function AdminDash() {
             });
     };
 
+    const FetchProjectProcessWaitRecordExtam = () => {
+        axios.get('resources/admin/projectadminprocess', {
+            params: {
+                project_process: 6
+            }
+        })
+            .then(response => {
+                const projectProcessWaitRecord = response.data.result.rows;
+
+                // Use Promise.all to handle multiple asynchronous calls
+                const fileLastUpdatePromises = projectProcessWaitRecord.map(item => {
+                    return axios.get('resources/admin/projectfilelast', {
+                        params: {
+                            id_project: item.id_project
+                        }
+                    })
+                        .then(res => res.data.result[0])
+                        .catch(err => {
+                            console.log(err);
+                            return null;
+                        });
+                });
+
+                // Wait for all promises to resolve
+                return Promise.all(fileLastUpdatePromises)
+                    .then(fileLastUpdates => {
+                        // Combine projectProcessWaitRecord with fileLastUpdates
+                        const combinedData = projectProcessWaitRecord.map((item, index) => ({
+                            ...item,
+                            fileLastUpdate: fileLastUpdates[index]
+                        }));
+                        return combinedData;
+                    });
+            })
+            .then(combinedData => {
+                setPdfUrl(null);
+                // setProjectProcessWaitSchdule(prevProjectProcessWaitSchdule => [...prevProjectProcessWaitSchdule, ...combinedData]);
+                setProjetProcessWaitRecord(combinedData);
+                console.log(combinedData);
+                setExpanded(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
     const Viewpdf = (id) => {
         console.log(id)
         handleFileDownload(id);
@@ -270,6 +350,7 @@ export default function AdminDash() {
         Fetchreqreport();
         FetchProjectProcess();
         FetchProjectProcessWaitSchdule();
+        FetchProjectProcessWaitRecordExtam();
         console.log(projectProcess)
     }, [selectstatus_code])
 
@@ -290,7 +371,8 @@ export default function AdminDash() {
                 id_project_file_paths: Canceldatafrom.id_project_file_paths,
                 comment: Cancelcomment,
                 id_project_status: Canceldatafrom.id_project_status,
-                id_project_status_title: Canceldatafrom.id_project_status_title
+                id_project_status_title: Canceldatafrom.id_project_status_title,
+                id_project : ajid
             }
         ).then((response) => {
             console.log(response.data)
@@ -313,6 +395,35 @@ export default function AdminDash() {
         } else {
             null
         }
+    }
+    const handleCancelcommentUNC = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
+        console.log(Canceldatafrom.id_project_file_paths, Cancelcomment, Canceldatafrom.id_project_status_title, Canceldatafrom.id_project_status)
+        axios.post('resources/admin/reqreport/prove',
+            {
+                id_project_file_paths: id_project_file_paths,
+                comment: comment,
+                id_project_status: id_project_status,
+                id_project_status_title: id_project_status_title,
+                id_project : ajid
+            }
+        ).then((response) => {
+            console.log(response.data)
+            window.location.reload();
+        });
+    }
+    const handlereportConfirmUNC = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
+        console.log(id_project_file_paths, comment, id_project_status_title, id_project_status)
+        axios.post('resources/admin/reqreport/approve',
+            {
+                id_project_file_paths: id_project_file_paths,
+                id_project_status: id_project_status,
+                id_project_status_title: id_project_status_title,
+                id_project : ajid
+            }
+        ).then((response) => {
+            console.log(response.data)
+            window.location.reload();
+        });
     }
 
     return (
@@ -535,25 +646,89 @@ export default function AdminDash() {
                                                     alignItems="center"
                                                     spacing={2} sx={{ mt: 2.5 }}>
                                                     <Button
-                                                        onClick={() => { axios.get('/resources/admin/room/schedule', {
-                                                            params: {
-                                                                id_project: ajid,
-                                                                id_project_status_title: idprojectstatustitle
-                                                            }
-                                                        })
-                                                            .then(res => {
-                                                                console.log(res.data.result.length)
-                                                                if (res.data.result.length === 0) {
-                                                                    window.alert("คุณยังไม่ได้จัดตารางสอบ")
-                                                                } else {
-                                                                    // ถ้ามีข้อมูล
-                                                                    handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status)
+                                                        onClick={() => {
+                                                            axios.get('/resources/admin/room/schedule', {
+                                                                params: {
+                                                                    id_project: ajid,
+                                                                    id_project_status_title: idprojectstatustitle
                                                                 }
                                                             })
-                                                            .catch(err => {
-                                                                console.log(err);
-                                                            });  }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                                .then(res => {
+                                                                    console.log(res.data.result.length)
+                                                                    if (res.data.result.length === 0) {
+                                                                        window.alert("คุณยังไม่ได้จัดตารางสอบ")
+                                                                    } else {
+                                                                        // ถ้ามีข้อมูล
+                                                                        handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status)
+                                                                    }
+                                                                })
+                                                                .catch(err => {
+                                                                    console.log(err);
+                                                                });
+                                                        }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
                                                     <Button onClick={() => { handlereportCancel(file.fileLastUpdate.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
+                                                </Stack>
+
+                                            </AccordionDetails>
+                                        }
+                                    </Accordion>
+                                ))}
+                            </Accordion>
+                            :
+                            null
+                    }
+                    {
+                        selectstatus_code == 21 && projectProcessWaitRecord.length > 0 ?
+                            <Accordion>
+                                <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบ</Typography>
+                                </AccordionSummary>
+                                {projectProcessWaitRecord.map((file, index) => (
+                                    console.log(file),
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { console.log(`${file.fileLastUpdate.id_project_file_path}`), handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        {
+                                            console.log(file)
+                                        }
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสโครงงาน {file.id_project}</Typography>
+                                            <Stack direction="column"
+                                                justifyContent="space-between"
+                                            >
+                                                <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
+                                                <Typography sx={{ pt: 0.3 }}>{file.id_project_status_title == 6 ? 'สอบหัวข้อ' : ''}</Typography>
+                                            </Stack>
+                                        </AccordionSummary>
+
+                                        <Stack direction="row"
+                                            justifyContent="flex-end"
+                                            alignItems="center"
+                                            spacing={2} sx={{ mt: 2.5, mr: 2 }}>
+                                            <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
+                                        </Stack>
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                        </Stack>
+                                        <ProjectDetail act={act} id={file.id_project} />
+
+                                        {/* <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>บันทึกผลการสอบ</Button> */}
+                                        {
+                                            <AccordionDetails >
+                                                <Stack direction="row"
+                                                    justifyContent="flex-end"
+                                                    alignItems="center"
+                                                    spacing={2} sx={{ mt: 2.5 }}>
+                                                    <Button
+                                                        onClick={() => { setA1(file.fileLastUpdate.id_project_file_path), setA2("สำเร็จ"), setA3(file.id_project_status_title), setA4(file.id_project_status), setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setmodalRecord(true) }} variant='contained' color='success' startIcon={<CheckIcon />}>บันทึกผลการสอบ</Button>
                                                 </Stack>
 
                                             </AccordionDetails>
@@ -628,32 +803,14 @@ export default function AdminDash() {
                         <Stack direction="row" spacing={0}>
                             <Typography sx={{ mt: 0.3, width: '33%', flexShrink: 0 }}>ที่ปรึกษา</Typography>
                             <Stack direction="column" spacing={0}>
-                                {
-                                    staff.map((data, index) => {
-                                        console.log("data");
-                                        // Use a variable to conditionally render the "ไม่มีที่ปรึกษา" message
-
-                                        data.staff.map((data2, index2) => {
-
-                                            if (data2.id_project === ajid && data2.id_project_staff_position === 2) {
-                                                adviserContent = (
-                                                    <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>
-                                                        {data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}
-                                                        <IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff) }} sx={{ pb: 1.2 }} aria-label="delete">
-                                                            <DeleteIcon color="error" fontSize="small" />
-                                                        </IconButton>
-                                                    </Typography>
-                                                );
-                                            }
-                                        });
-
-                                        // Render the content for each staff member
-                                        return (
-                                            <div key={index}>
-                                                {adviserContent ? adviserContent : <Typography sx={{ color: 'red' }} key={index}>ไม่มีกรรมการ</Typography>}
-                                            </div>
-                                        );
-                                    })
+                            {
+                                    staff.map((data) => (
+                                        data.staff.map((data2, index2) => (
+                                            (data2.id_project === ajid && data2.id_project_staff_position === 2) ?
+                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff), console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                : ''
+                                        ))
+                                    ))
                                 }
 
                             </Stack>
@@ -691,7 +848,7 @@ export default function AdminDash() {
             </Modal>
 
             <Modal open={openCalander} onClose={() => { setOpenCalander(false) }}>
-                <Box sx={{ ...style, width: 'auto' }}>
+                <Box sx={{ ...style, width: '900px' }}>
                     <Calander idprojectstatustitle={idprojectstatustitle} ajid={ajid} />
                 </Box>
             </Modal>
@@ -717,6 +874,73 @@ export default function AdminDash() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Modal open={modalRecord} onClose={() => { setmodalRecord(false) }}>
+                <Box sx={{ ...style, width: 400 }}>
+                    <h2 id="parent-modal-title">บันทึกผลการสอบ</h2>
+                    {examrecord}
+                    {a1}
+                    {a2}
+                    {a3}
+                    {a4}
+                    <RadioGroup
+                        onChange={(e) => { setExamrecord(e.target.value) }}
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                    >
+                        <FormControlLabel value="ผ่าน" control={<Radio />} label="ผ่าน" />
+                        <FormControlLabel value="ไม่ผ่าน" control={<Radio />} label="ไม่ผ่าน" />
+                    </RadioGroup>
+                    <Box component="form" noValidate onSubmit={handleCancelcomment} sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="comment"
+                            label="หมายเหตุ"
+                            name="comment"
+                            autoFocus
+                            value={examrecordcomment}
+                            onChange={(e) => { setExamrecordcomment(e.target.value) }}
+                        />
+
+                        <Stack direction="row"
+                            justifyContent="flex-end"
+                            alignItems="center"
+                            spacing={2} sx={{ mt: 2.5 }}><Button
+                                onClick={() => {
+                                    examrecord != ''
+                                        ?
+                                        examrecord == 'ไม่ผ่าน'
+                                            ?
+                                            examrecordcomment != ''
+                                                ?
+                                                confirm('ยืนยันต้องการบันทึกข้อมูลนี้หรือไม่')
+                                                    ?
+                                                    cfrecordexam()
+                                                    :
+                                                    null
+                                                :
+                                                window.alert('กรุณากรอกหมายเหตุ')
+                                            :
+                                            confirm('ยืนยันต้องการบันทึกข้อมูลนี้หรือไม่')
+                                                ?
+                                                cfrecordexam()
+                                                :
+                                                null
+                                        :
+                                        window.alert('กรุณาเลือกผลการสอบ')
+                                }}
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                ยืนยัน
+                            </Button>
+                            <Button onClick={() => { setmodalRecord(false) }} variant='contained' color='error'>ยกเลิก</Button>
+                        </Stack>
+                    </Box>
+                </Box>
+            </Modal>
         </>
     )
 }

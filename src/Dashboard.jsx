@@ -20,8 +20,7 @@ import RouteStdGrops from './Components/StdGrops';
 import RouteStudent from './Components/TableStuden'
 import RouteTeacher from './Components/TableTeaher'
 import RouteAdminDash from './Components/AdminDash'
-
-
+import Record from './Components/Record';
 
 const drawerWidth = 240;
 
@@ -117,6 +116,7 @@ export default function Dashboard() {
                                 <Route path="add/teacher" element={<RouteTeacher />} />
                                 <Route path="add/student" element={<RouteStudent />} />
                                 <Route path="add/studentgrops" element={<RouteStdGrops />} />
+                                <Route path="record" element={<Record />} />
                                 <Route path='/' element={<RouteAdminDash />} />
                                 <Route path='*' element={<h1>Not Found 404</h1>} />
                             </Routes>
