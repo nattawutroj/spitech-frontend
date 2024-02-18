@@ -13,8 +13,29 @@ import Add from '@mui/icons-material/Add';
 import axios from '../libs/Axios';
 import ModalAddStaff from './ModalAddStaff';
 import { TextField } from '@mui/material';
+import { MenuItem } from '@mui/material';
+import { Select } from '@mui/material';
+import { InputLabel } from '@mui/material';
 
-export default function ProjectCard({ projectinfo,editMode,setEditMode }) {
+
+export default function ProjectCard({ projectinfo, editMode, setEditMode }) {
+    const [subject, setSubject] = React.useState(-1);
+    const [subjectList, setSubjectList] = React.useState();
+    const handleChangesubject = (event) => {
+        setSubject(event.target.value);
+    };
+    React.useEffect(() => {
+        const fetchSubject = async () => {
+            try {
+                const response = await axios.get('/resources/public/subject');
+                
+                setSubjectList(response.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchSubject();
+    }, []);
 
     const [dialog, setDialog] = React.useState(false);
     const [dialogstaff, setDialogStaff] = React.useState(false);
@@ -68,7 +89,7 @@ export default function ProjectCard({ projectinfo,editMode,setEditMode }) {
 
     const submitBuild = async (e) => {
         e.preventDefault();
-        if (project_title_th === '' || project_title_en === '') {
+        if (project_title_th === '' || project_title_en === '' || subject === -1) {
             setErrAlert(true)
         } else {
             try {
@@ -77,7 +98,8 @@ export default function ProjectCard({ projectinfo,editMode,setEditMode }) {
                     project_title_th: project_title_th,
                     project_title_en: project_title_en,
                     case_study_title_th: project_study_title_th,
-                    case_study_title_en: project_study_title_en
+                    case_study_title_en: project_study_title_en,
+                    subject_code: subject
                 });
                 setOpenBuild(false);
                 window.location.reload();
@@ -487,8 +509,29 @@ export default function ProjectCard({ projectinfo,editMode,setEditMode }) {
                             value={project_study_title_en}
                             onChange={(e) => { setProject_study_title_en(e.target.value) }}
                         />
+                        <InputLabel id="select-subject">เลือกรายวิชาโครงงานพิเศษ</InputLabel>
+                        <Select
+                            fullWidth
+                            labelId="select-subject"
+                            id="select-subject"
+                            value={subject}
+                            error={errAlert}
+                            label="เลือกรายวิชาโครงงานพิเศษ"
+                            onChange={handleChangesubject}
+                        >
+                            {
+                                console.log(subjectList)
+                            }
+                            <MenuItem value={-1}></MenuItem>
+                            {subjectList ? subjectList.map((item, index) => {
+                                return (
+                                    <MenuItem key={index} value={item.subject_code}>{item.subject_code + "  " + item.subject_name}</MenuItem>
+                                )
+                            }) : ''}
+                        </Select>
                         <Button
                             type="submit"
+                            required
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}

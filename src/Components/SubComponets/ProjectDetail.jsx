@@ -6,7 +6,7 @@ import { Typography } from '@mui/material';
 import axios from '../../libs/Axios';
 
 
-export default function ProjectDetail({ act,id }) {
+export default function ProjectDetail({ act, id }) {
 
     const [item, setItem] = React.useState([]);
     const [staff, setStaff] = React.useState([]);
@@ -112,6 +112,12 @@ export default function ProjectDetail({ act,id }) {
                     id="panel1a-header"
                 >
                     <Stack direction="row" spacing={0}>
+                        {/* {
+                            console.log(item)
+                        }
+                        {
+                            console.log(staff)
+                        } */}
                         <Typography sx={{ mt: 0.3, width: '33%', flexShrink: 0 }}>ที่ปรึกษา</Typography>
                         <Stack direction="column" spacing={0}>
                             {

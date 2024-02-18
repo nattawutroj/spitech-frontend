@@ -6,9 +6,17 @@ import axios from "../libs/Axios";
 import Accord from "./Accord";
 import ProjectCard from "./ProjectCard";
 import ProjectStudentHome from "./ProjectStudentHome";
+import { Select, MenuItem, InputLabel } from "@mui/material";
+
 
 export default function ProjectDash() {
     const profile = React.useContext(ProfileContext);
+    const [subject, setSubject] = React.useState(-1);
+    const [subjectList, setSubjectList] = React.useState('');
+    const handleChangesubject = (e) => {
+        setSubject(e.target.value);
+    }
+
     console.log(profile);
     const [open, setOpen] = React.useState(false);
     const [openBuild, setOpenBuild] = React.useState(false);
@@ -46,7 +54,7 @@ export default function ProjectDash() {
         const project_title_en = e.target.project_title_en.value;
         const project_study_title_th = e.target.project_study_title_th.value;
         const project_study_title_en = e.target.project_study_title_en.value;
-        if (project_title_th == '' || project_title_en == '') {
+        if (project_title_th == '' || project_title_en == '' || subject == -1) {
             setErrAlert(true);
             return;
         }
@@ -55,6 +63,7 @@ export default function ProjectDash() {
             project_title_en: project_title_en,
             project_study_title_th: project_study_title_th,
             project_study_title_en: project_study_title_en,
+            subject_code: subject
         }).then((res) => {
             console.log(res);
             if (res.data.status == 200) {
@@ -106,6 +115,19 @@ export default function ProjectDash() {
         })
     }
 
+    const fetchsubject = () => {
+        console.log("fetchsubject");
+        axios.get('/resources/public/subject').then((res) => {
+            console.log(res);
+            if (res.data.code == 200) {
+                console.log(res.data);
+                setSubjectList(res.data.data);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
     const submitJoin = () => {
         console.log("asd");
         axios.post('/user/join', {
@@ -140,6 +162,7 @@ export default function ProjectDash() {
         }).catch((err) => {
             console.log(err);
         })
+        fetchsubject();
     }, [])
 
     return (
@@ -175,12 +198,12 @@ export default function ProjectDash() {
                 aria-describedby="parent-modal-description"
             >
                 <Box sx={{ ...styleModal, width: 400 }}>
-                    <h2 id="parent-modal-title">Text in a modal</h2>
+                    <h2 id="parent-modal-title"></h2>
                     <Stack direction="row" spacing={2}>
-                        <Button mr="3" variant="contained" onClick={handleOpenBuild}>
+                        <Button sx={{ width: '50%', height: '100px' }} mr="3" variant="contained" onClick={handleOpenBuild}>
                             สร้างโปรเจค
                         </Button>
-                        <Button variant="contained" onClick={handleOpenJoin}>
+                        <Button sx={{ width: '50%', height: '100px' }} variant="contained" onClick={handleOpenJoin}>
                             เข้าร่วมโปรเจค
                         </Button>
                     </Stack>
@@ -233,6 +256,26 @@ export default function ProjectDash() {
                             name="project_study_title_en"
                             autoFocus
                         />
+                        <InputLabel id="select-subject">เลือกรายวิชาโครงงานพิเศษ</InputLabel>
+                        <Select
+                            fullWidth
+                            labelId="select-subject"
+                            id="demo-simple-select"
+                            value={subject}
+                            error={errAlert}
+                            label="เลือกรายวิชาโครงงานพิเศษ"
+                            onChange={handleChangesubject}
+                        >
+                            {
+                                console.log(subjectList)
+                            }
+                            <MenuItem value={-1}></MenuItem>
+                            {subjectList ? subjectList.map((item, index) => {
+                                return (
+                                    <MenuItem key={index} value={item.subject_code}>{item.subject_code + "  " +item.subject_name}</MenuItem>
+                                )
+                            }) : ''}
+                        </Select>
                         <Button
                             type="submit"
                             fullWidth

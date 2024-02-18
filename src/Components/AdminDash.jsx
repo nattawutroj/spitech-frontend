@@ -32,10 +32,30 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 
 export default function AdminDash() {
-
     const [dialogstaff, setDialogstaff] = React.useState(false);
     const [aaid_staff, setAaid_staff] = React.useState('');
     const [openCalander, setOpenCalander] = React.useState(false);
+    const [lableexam1, setLableexam1] = React.useState(0);
+    const [lableexam2, setLableexam2] = React.useState(0);
+    const [lableexam3, setLableexam3] = React.useState(0);
+
+    const listcount = () => {
+        setLableexam1(0);
+        setLableexam2(0);
+        setLableexam3(0);
+        fileList.map((file) => {
+            if (file.id_project_status_title == 3) {
+                setLableexam1((prevLableexam1) => prevLableexam1 + 1);
+            }
+            if (file.id_project_status_title == 9) {
+                setLableexam2((prevLableexam2) => prevLableexam2 + 1);
+            }
+            if (file.id_project_status_title == 13) {
+                setLableexam3((prevLableexam3) => prevLableexam3 + 1);
+            }
+        }
+        )
+    }
 
 
     const handleCloseDelStaff = () => {
@@ -43,7 +63,6 @@ export default function AdminDash() {
     };
 
     const handleRemoveStaff = (id) => {
-        console.log(id);
         setAaid_staff(id);
         setDialogstaff(true);
     }
@@ -55,7 +74,6 @@ export default function AdminDash() {
             }
         })
             .then(res => {
-                console.log(res.data);
                 if (res.data.status === 200) {
                     window.alert("ลบข้อมูลสำเร็จ");
                     setDialogstaff(false);
@@ -177,7 +195,7 @@ export default function AdminDash() {
                 comment_exam: examrecordcomment
             }
         ).then((response) => {
-            console.log(response.data)
+            console.log(response);
             window.location.reload();
         });
     }
@@ -198,6 +216,11 @@ export default function AdminDash() {
             console.log(err);
         })
     }
+
+    React.useEffect(() => {
+        listcount();
+    }, [fileList])
+
     const FetchProjectProcess = () => {
         axios.get('resources/admin/projectadminprocess', {
             params: {
@@ -236,7 +259,6 @@ export default function AdminDash() {
                 setPdfUrl(null);
                 // setProjectProcess(prevProjectProcess => [...prevProjectProcess, ...combinedData]);
                 setProjectProcess(combinedData);
-                console.log(combinedData);
                 setExpanded(false);
             })
             .catch(err => {
@@ -282,7 +304,6 @@ export default function AdminDash() {
                 setPdfUrl(null);
                 // setProjectProcessWaitSchdule(prevProjectProcessWaitSchdule => [...prevProjectProcessWaitSchdule, ...combinedData]);
                 setProjectProcessWaitSchdule(combinedData);
-                console.log(combinedData);
                 setExpanded(false);
             })
             .catch(err => {
@@ -328,7 +349,6 @@ export default function AdminDash() {
                 setPdfUrl(null);
                 // setProjectProcessWaitSchdule(prevProjectProcessWaitSchdule => [...prevProjectProcessWaitSchdule, ...combinedData]);
                 setProjetProcessWaitRecord(combinedData);
-                console.log(combinedData);
                 setExpanded(false);
             })
             .catch(err => {
@@ -337,7 +357,6 @@ export default function AdminDash() {
     };
 
     const Viewpdf = (id) => {
-        console.log(id)
         handleFileDownload(id);
     }
 
@@ -351,11 +370,9 @@ export default function AdminDash() {
         FetchProjectProcess();
         FetchProjectProcessWaitSchdule();
         FetchProjectProcessWaitRecordExtam();
-        console.log(projectProcess)
     }, [selectstatus_code])
 
     const handlereportCancel = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
-        console.log(id_project_file_paths, comment, id_project_status_title, id_project_status)
         setCanceldatafrom({
             id_project_file_paths: id_project_file_paths,
             id_project_status_title: id_project_status_title,
@@ -365,23 +382,21 @@ export default function AdminDash() {
     }
 
     const handleCancelcomment = () => {
-        console.log(Canceldatafrom.id_project_file_paths, Cancelcomment, Canceldatafrom.id_project_status_title, Canceldatafrom.id_project_status)
         axios.post('resources/admin/reqreport/prove',
             {
                 id_project_file_paths: Canceldatafrom.id_project_file_paths,
                 comment: Cancelcomment,
                 id_project_status: Canceldatafrom.id_project_status,
                 id_project_status_title: Canceldatafrom.id_project_status_title,
-                id_project : ajid
+                id_project: ajid
             }
         ).then((response) => {
-            console.log(response.data)
+            console.log(response);
             window.location.reload();
         });
     }
     const handlereportConfirm = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
         if (confirm("ยืนยันการดำเนินการ")) {
-            console.log(id_project_file_paths, comment, id_project_status_title, id_project_status)
             axios.post('resources/admin/reqreport/approve',
                 {
                     id_project_file_paths: id_project_file_paths,
@@ -389,7 +404,7 @@ export default function AdminDash() {
                     id_project_status_title: id_project_status_title
                 }
             ).then((response) => {
-                console.log(response.data)
+                console.log(response);
                 window.location.reload();
             });
         } else {
@@ -397,34 +412,33 @@ export default function AdminDash() {
         }
     }
     const handleCancelcommentUNC = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
-        console.log(Canceldatafrom.id_project_file_paths, Cancelcomment, Canceldatafrom.id_project_status_title, Canceldatafrom.id_project_status)
         axios.post('resources/admin/reqreport/prove',
             {
                 id_project_file_paths: id_project_file_paths,
                 comment: comment,
                 id_project_status: id_project_status,
                 id_project_status_title: id_project_status_title,
-                id_project : ajid
+                id_project: ajid
             }
         ).then((response) => {
-            console.log(response.data)
+            console.log(response);
             window.location.reload();
         });
     }
     const handlereportConfirmUNC = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
-        console.log(id_project_file_paths, comment, id_project_status_title, id_project_status)
         axios.post('resources/admin/reqreport/approve',
             {
                 id_project_file_paths: id_project_file_paths,
                 id_project_status: id_project_status,
                 id_project_status_title: id_project_status_title,
-                id_project : ajid
+                id_project: ajid
             }
         ).then((response) => {
-            console.log(response.data)
+            console.log(response);
             window.location.reload();
         });
     }
+
 
     return (
         <>
@@ -446,115 +460,361 @@ export default function AdminDash() {
             </FormControl>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={12} lg={6}>
-                    {fileList?.map((file, index) => (
-                        <Accordion expanded={expanded === `${file.id_project_file_path}`} onChange={() => { console.log(`${file.id_project_file_path}`), handleChange(`${file.id_project_file_path}`), Viewpdf(file.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                    <Accordion>
+                        <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>ยื่นสอบหัวข้อ</Typography>
                             {
-                                console.log(file)
+                                lableexam1 > 0 ?
+                                    <Typography sx={{ pt: 0.3, color: green[600] }}>มี {lableexam1} รอทำรายการอยู่</Typography>
+                                    :
+                                    <Typography sx={{ pt: 0.3 }}>ไม่มีรายการที่รอทำรายการอยู่</Typography>
                             }
-                            <AccordionSummary
-                                expandIcon={<CloudUploadIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
-                                {
-                                    file.staus_code == 21 ?
-                                        <Typography sx={{ pt: 0.3, color: green[600] }}>{file.doc_status_name_title}</Typography>
-                                        :
-                                        file.staus_code == 18 ?
-                                            <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
-                                            :
-                                            null
-                                }
-                            </AccordionSummary>
-
-                            <Stack
-                                direction="row"
-                                justifyContent="space-between"
-                                alignItems="center"
-                                spacing={2}
-                                sx={{ ml: 4, mr: 4 }}
-                            >
-                                <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
-                                <Typography sx={{ mt: 0.1, pr: '50%', color: 'text.secondary' }}>{file.id_project}</Typography>
-                            </Stack>
-                            <ProjectDetail id={file.id_project} />
-                            <AccordionDetails>
-                                <Card sx={{ p: 1 }}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Stack direction="row" spacing={0}>
-                                        <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>เวลา</Typography>
-                                        <Stack direction="column" spacing={0}>
-                                            <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{convertDate(file.timestamp)}</Typography>
-                                        </Stack>
-                                    </Stack>
-                                </Card>
-                                <Card sx={{ p: 1 }}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Stack direction="row" spacing={0}>
-                                        <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>สถานะ</Typography>
-                                        <Stack direction="column" spacing={0}>
+                        </AccordionSummary>
+                        {
+                            fileList?.map((file, index) => (
+                                file.id_project_status_title == 3 ?
+                                    <Accordion expanded={expanded === `${file.id_project_file_path}`} onChange={() => { handleChange(`${file.id_project_file_path}`), Viewpdf(file.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                             {
                                                 file.staus_code == 21 ?
-                                                    <Typography sx={{ pt: 0.3, color: orange[600] }}>{file.doc_status_name_title}</Typography>
+                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.doc_status_name_title}</Typography>
                                                     :
-                                                    file.staus_code == 19 ?
+                                                    file.staus_code == 18 ?
                                                         <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
                                                         :
                                                         null
                                             }
-                                        </Stack>
-                                    </Stack>
-                                </Card>
-                                <Card sx={{ p: 1 }}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Stack direction="row" spacing={0}>
-                                        <Typography sx={{ mt: 2, width: '33%', flexShrink: 0 }}>ไฟล์</Typography>
-                                        <Stack direction="column" spacing={0}>
-                                            <Typography sx={{ pt: 1, mb: 1, color: 'text.secondary' }}><Button onClick={() => { handleFileDownload(file.path) }} component="label" variant="contained" startIcon={<ZoomIn />}>View File</Button></Typography>
-                                        </Stack>
-                                    </Stack>
-                                </Card>
-                                {
+                                        </AccordionSummary>
 
-                                    file.comment != null ?
-                                        <Card sx={{ p: 1 }}
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                            <Typography sx={{ mt: 0.1, pr: '50%', color: 'text.secondary' }}>{file.id_project}</Typography>
+                                        </Stack>
+                                        <ProjectDetail id={file.id_project} />
+                                        <AccordionDetails>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>เวลา</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{convertDate(file.timestamp)}</Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>สถานะ</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        {
+                                                            file.staus_code == 21 ?
+                                                                <Typography sx={{ pt: 0.3, color: orange[600] }}>{file.doc_status_name_title}</Typography>
+                                                                :
+                                                                file.staus_code == 19 ?
+                                                                    <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                                    :
+                                                                    null
+                                                        }
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 2, width: '33%', flexShrink: 0 }}>ไฟล์</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ pt: 1, mb: 1, color: 'text.secondary' }}><Button onClick={() => { handleFileDownload(file.path) }} component="label" variant="contained" startIcon={<ZoomIn />}>View File</Button></Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            {
+
+                                                file.comment != null ?
+                                                    <Card sx={{ p: 1 }}
+                                                        aria-controls="panel1a-content"
+                                                        id="panel1a-header"
+                                                    >
+                                                        <Stack direction="row" spacing={0}>
+                                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>หมายเหตุ</Typography>
+                                                            <Stack direction="column" spacing={0}>
+                                                                <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{file.comment}</Typography>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </Card> : ''
+                                            }
+
+                                            {
+                                                selectstatus_code == 21 ?
+                                                    <Stack direction="row"
+                                                        justifyContent="flex-end"
+                                                        alignItems="center"
+                                                        spacing={2} sx={{ mt: 2.5 }}>
+                                                        <Button onClick={() => { handlereportConfirm(file.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status) }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                        <Button onClick={() => { handlereportCancel(file.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
+                                                    </Stack>
+                                                    :
+                                                    null
+                                            }
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    :
+                                    null
+                            ))}
+                    </Accordion>
+                    <Accordion>
+                        <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>ยื่นสอบหกสิบ</Typography>
+                            {
+                                lableexam2 > 0 ?
+                                    <Typography sx={{ pt: 0.3, color: green[600] }}>มี {lableexam2} รอทำรายการอยู่</Typography>
+                                    :
+                                    <Typography sx={{ pt: 0.3 }}>ไม่มีรายการที่รอทำรายการอยู่</Typography>
+                            }
+                        </AccordionSummary>
+                        {
+                            fileList?.map((file, index) => (
+                                file.id_project_status_title == 9 ?
+                                    <Accordion expanded={expanded === `${file.id_project_file_path}`} onChange={() => { handleChange(`${file.id_project_file_path}`), Viewpdf(file.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
-                                            <Stack direction="row" spacing={0}>
-                                                <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>หมายเหตุ</Typography>
-                                                <Stack direction="column" spacing={0}>
-                                                    <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{file.comment}</Typography>
-                                                </Stack>
-                                            </Stack>
-                                        </Card> : ''
-                                }
-
-                                {
-                                    selectstatus_code == 21 ?
-                                        <Stack direction="row"
-                                            justifyContent="flex-end"
-                                            alignItems="center"
-                                            spacing={2} sx={{ mt: 2.5 }}>
-                                            <Button onClick={() => { handlereportConfirm(file.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status) }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                             {
-                                                console.log(file.id_project_file_path)
+                                                file.staus_code == 21 ?
+                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.doc_status_name_title}</Typography>
+                                                    :
+                                                    file.staus_code == 18 ?
+                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                        :
+                                                        null
                                             }
-                                            <Button onClick={() => { handlereportCancel(file.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
+                                        </AccordionSummary>
+
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                            <Typography sx={{ mt: 0.1, pr: '50%', color: 'text.secondary' }}>{file.id_project}</Typography>
                                         </Stack>
-                                        :
-                                        null
-                                }
-                            </AccordionDetails>
-                        </Accordion>
-                    ))}
+                                        <ProjectDetail id={file.id_project} />
+                                        <AccordionDetails>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>เวลา</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{convertDate(file.timestamp)}</Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>สถานะ</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        {
+                                                            file.staus_code == 21 ?
+                                                                <Typography sx={{ pt: 0.3, color: orange[600] }}>{file.doc_status_name_title}</Typography>
+                                                                :
+                                                                file.staus_code == 19 ?
+                                                                    <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                                    :
+                                                                    null
+                                                        }
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 2, width: '33%', flexShrink: 0 }}>ไฟล์</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ pt: 1, mb: 1, color: 'text.secondary' }}><Button onClick={() => { handleFileDownload(file.path) }} component="label" variant="contained" startIcon={<ZoomIn />}>View File</Button></Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            {
+
+                                                file.comment != null ?
+                                                    <Card sx={{ p: 1 }}
+                                                        aria-controls="panel1a-content"
+                                                        id="panel1a-header"
+                                                    >
+                                                        <Stack direction="row" spacing={0}>
+                                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>หมายเหตุ</Typography>
+                                                            <Stack direction="column" spacing={0}>
+                                                                <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{file.comment}</Typography>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </Card> : ''
+                                            }
+
+                                            {
+                                                selectstatus_code == 21 ?
+                                                    <Stack direction="row"
+                                                        justifyContent="flex-end"
+                                                        alignItems="center"
+                                                        spacing={2} sx={{ mt: 2.5 }}>
+                                                        <Button onClick={() => { handlereportConfirm(file.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status) }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                        <Button onClick={() => { handlereportCancel(file.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
+                                                    </Stack>
+                                                    :
+                                                    null
+                                            }
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    :
+                                    null
+                            ))}
+                    </Accordion>
+
+                    <Accordion>
+                        <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>ยื่นสอบร้อย</Typography>
+                            {
+                                lableexam3 > 0 ?
+                                    <Typography sx={{ pt: 0.3, color: green[600] }}>มี {lableexam3} รอทำรายการอยู่</Typography>
+                                    :
+                                    <Typography sx={{ pt: 0.3 }}>ไม่มีรายการที่รอทำรายการอยู่</Typography>
+                            }
+                        </AccordionSummary>
+                        {
+                            fileList?.map((file, index) => (
+                                file.id_project_status_title == 13 ?
+                                    <Accordion expanded={expanded === `${file.id_project_file_path}`} onChange={() => { handleChange(`${file.id_project_file_path}`), Viewpdf(file.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
+                                            {
+                                                file.staus_code == 21 ?
+                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.doc_status_name_title}</Typography>
+                                                    :
+                                                    file.staus_code == 18 ?
+                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                        :
+                                                        null
+                                            }
+                                        </AccordionSummary>
+
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                            <Typography sx={{ mt: 0.1, pr: '50%', color: 'text.secondary' }}>{file.id_project}</Typography>
+                                        </Stack>
+                                        <ProjectDetail id={file.id_project} />
+                                        <AccordionDetails>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>เวลา</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{convertDate(file.timestamp)}</Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>สถานะ</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        {
+                                                            file.staus_code == 21 ?
+                                                                <Typography sx={{ pt: 0.3, color: orange[600] }}>{file.doc_status_name_title}</Typography>
+                                                                :
+                                                                file.staus_code == 19 ?
+                                                                    <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                                    :
+                                                                    null
+                                                        }
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 2, width: '33%', flexShrink: 0 }}>ไฟล์</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ pt: 1, mb: 1, color: 'text.secondary' }}><Button onClick={() => { handleFileDownload(file.path) }} component="label" variant="contained" startIcon={<ZoomIn />}>View File</Button></Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            {
+
+                                                file.comment != null ?
+                                                    <Card sx={{ p: 1 }}
+                                                        aria-controls="panel1a-content"
+                                                        id="panel1a-header"
+                                                    >
+                                                        <Stack direction="row" spacing={0}>
+                                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>หมายเหตุ</Typography>
+                                                            <Stack direction="column" spacing={0}>
+                                                                <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{file.comment}</Typography>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </Card> : ''
+                                            }
+
+                                            {
+                                                selectstatus_code == 21 ?
+                                                    <Stack direction="row"
+                                                        justifyContent="flex-end"
+                                                        alignItems="center"
+                                                        spacing={2} sx={{ mt: 2.5 }}>
+                                                        <Button onClick={() => { handlereportConfirm(file.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status) }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                        <Button onClick={() => { handlereportCancel(file.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
+                                                    </Stack>
+                                                    :
+                                                    null
+                                            }
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    :
+                                    null
+                            ))}
+                    </Accordion>
                     {
                         selectstatus_code == 21 && projectProcess.length > 0 ?
                             <Accordion>
@@ -562,11 +822,7 @@ export default function AdminDash() {
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอแต่งตั้งกรรมการ</Typography>
                                 </AccordionSummary>
                                 {projectProcess.map((file, index) => (
-                                    console.log(file),
-                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { console.log(`${file.fileLastUpdate.id_project_file_path}`), handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
-                                        {
-                                            console.log(file)
-                                        }
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
@@ -613,11 +869,7 @@ export default function AdminDash() {
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอจัดตารางสอบ</Typography>
                                 </AccordionSummary>
                                 {projectProcessWaitSchdule.map((file, index) => (
-                                    console.log(file),
-                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { console.log(`${file.fileLastUpdate.id_project_file_path}`), handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
-                                        {
-                                            console.log(file)
-                                        }
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
@@ -654,7 +906,6 @@ export default function AdminDash() {
                                                                 }
                                                             })
                                                                 .then(res => {
-                                                                    console.log(res.data.result.length)
                                                                     if (res.data.result.length === 0) {
                                                                         window.alert("คุณยังไม่ได้จัดตารางสอบ")
                                                                     } else {
@@ -684,11 +935,7 @@ export default function AdminDash() {
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบ</Typography>
                                 </AccordionSummary>
                                 {projectProcessWaitRecord.map((file, index) => (
-                                    console.log(file),
-                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { console.log(`${file.fileLastUpdate.id_project_file_path}`), handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
-                                        {
-                                            console.log(file)
-                                        }
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
@@ -803,11 +1050,11 @@ export default function AdminDash() {
                         <Stack direction="row" spacing={0}>
                             <Typography sx={{ mt: 0.3, width: '33%', flexShrink: 0 }}>ที่ปรึกษา</Typography>
                             <Stack direction="column" spacing={0}>
-                            {
+                                {
                                     staff.map((data) => (
                                         data.staff.map((data2, index2) => (
                                             (data2.id_project === ajid && data2.id_project_staff_position === 2) ?
-                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff), console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
                                                 : ''
                                         ))
                                     ))
@@ -827,7 +1074,7 @@ export default function AdminDash() {
                                     staff.map((data) => (
                                         data.staff.map((data2, index2) => (
                                             (data2.id_project === ajid && data2.id_project_staff_position === 3) ?
-                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff), console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
                                                 : ''
                                         ))
                                     ))
@@ -836,7 +1083,7 @@ export default function AdminDash() {
                                     staff.map((data) => (
                                         data.os_staff.map((data2, index2) => (
                                             (data2.id_project === ajid && data2.id_project_staff_position === 3) ?
-                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff), console.log(data2) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
+                                                <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index2}>{data2.name_title_th + ' ' + data2.first_name_th + ' ' + data2.last_name_th}<IconButton onClick={() => { handleRemoveStaff(data2.id_project_staff) }} sx={{ pb: 1.2 }} aria-label="delete"><DeleteIcon color="error" fontSize="small" /></IconButton></Typography>
                                                 : ''
                                         ))
                                     ))
