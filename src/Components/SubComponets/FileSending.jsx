@@ -8,6 +8,9 @@ import { AccordionDetails } from '@mui/material';
 import { Accordion, AccordionSummary, Card, Stack, Typography } from '@mui/material';
 import { DeleteForeverOutlined, ZoomIn } from '@mui/icons-material';
 import { orange, red, green } from '@mui/material/colors';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import Box from '@mui/material/Box';
+
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -22,6 +25,10 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function FileSending({ itemprojectinfo, id_project }) {
+    const [testcat, setTestcat] = useState(1);
+    const handleChangetestcat = (event) => {
+        setTestcat(event.target.value);
+    };
     console.log(itemprojectinfo)
     const [file, setFile] = useState(null);
     const [fileList, setFileList] = useState(null);
@@ -61,29 +68,35 @@ export default function FileSending({ itemprojectinfo, id_project }) {
 
 
     const handleFileUpload = () => {
-        if (file) {
-            const formData = new FormData();
-            formData.append('', file);
-            formData.append('id_project', id_project)
-            formData.append('id_project_status', itemprojectinfo.id_project_status)
-            formData.append('id_project_status_title', itemprojectinfo.id_project_status_title)
-
-
-            // Perform Axios POST request to /user/file/upload
-            axios.post('/user/upload/pdf', formData)
-                .then(response => {
-                    // Handle success
-                    console.log('File uploaded successfully:', response.data);
-                    window.location.reload();
-                })
-                .catch(error => {
-                    // Handle error
-                    console.error('Error uploading file:', error);
-                });
-        } else {
-            alert('Please select a valid PDF file before uploading.');
+        if ((itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) && testcat == 1) {
+            alert('โปรดระบุประเภทการยื่นสอบ')
         }
-    };
+        else {
+            if (file) {
+                const formData = new FormData();
+                formData.append('', file);
+                formData.append('id_project', id_project)
+                formData.append('id_project_status', itemprojectinfo.id_project_status)
+                formData.append('id_project_status_title', itemprojectinfo.id_project_status_title)
+                formData.append('testcat', testcat)
+
+
+                // Perform Axios POST request to /user/file/upload
+                axios.post('/user/upload/pdf', formData)
+                    .then(response => {
+                        // Handle success
+                        console.log('File uploaded successfully:', response.data);
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error('Error uploading file:', error);
+                    });
+            } else {
+                alert('Please select a valid PDF file before uploading.');
+            }
+        }
+    }
 
     const handleFileDownload = (id_file) => {
         axios.get('/resources/public/download/pdf', {
@@ -148,7 +161,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                                 file.staus_code == 25 ?
                                                     <Typography sx={{ pt: 0.3, color: green[600] }}>{file.project_status_name_title}</Typography>
                                                     :
-                                                null
+                                                    null
                                     }
                                 </AccordionSummary>
 
@@ -213,13 +226,19 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                     ))}
 
                     {
-                        itemprojectinfo.id_project_status_title == 2 ?
+                        (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7) ?
                             <Typography variant="h6" gutterBottom component="div">
                                 <Stack sx={{ mt: 2 }} spacing={2} direction="row"
-                                    justifyContent="center"
-                                    alignItems="center">
+                                    justifyContent="space-around"
+                                    alignItems="center"
+
+                                >
+
+                                    <Typography variant="body2" color="text.secondary">
+                                        {file ? file.name : 'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'}
+                                    </Typography>
                                     <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                        Upload file
+                                        Upload File
                                         <VisuallyHiddenInput
                                             type="file"
                                             onChange={handleFileChange}
@@ -227,16 +246,34 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                         />
                                     </Button>
 
-                                    <Typography variant="body2" color="text.secondary">
-                                        {file ? file.name : 'No file selected'}
-                                    </Typography>
+                                    {
+                                        (itemprojectinfo.id_project_status_title != 2) ?
+                                            <Box sx={{ minWidth: 200 }}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">ประเภทยื่นสอบ</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={testcat}
+                                                        label="ประเภทยื่นสอบ"
+                                                        onChange={handleChangetestcat}
+                                                    >
+                                                        <MenuItem value={1}>โปรดระบุ</MenuItem>
+                                                        <MenuItem value={2}>ยื่นสอบหกสิบ</MenuItem>
+                                                        <MenuItem value={3}>ยื่นสอบร้อย</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                            :
+                                            null
+                                    }
                                     <Button
                                         variant="contained"
                                         color="primary"
                                         onClick={handleFileUpload}
                                         disabled={!file} // Disable the button if no file selected
                                     >
-                                        Send file
+                                        ยื่นสอบ
                                     </Button>
                                 </Stack>
                             </Typography>
@@ -333,7 +370,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                     </Accordion>
                 </>
                 :
-                itemprojectinfo.id_project_status_title == 2 ?
+                (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7) ?
                     <Typography variant="h6" gutterBottom component="div">
                         <Stack sx={{ mt: 2 }} spacing={2} direction="row"
                             justifyContent="center"
@@ -362,7 +399,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                     </Typography>
                     : ''
             }
-            
+
         </>
     );
 }
