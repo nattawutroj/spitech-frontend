@@ -13,7 +13,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/studentdash/*" element={<RouteStudenDash />} />
-          <Route path="/testreport" element={<Report />} />
+          <Route path="/testreport/:id/:selectReport" element={<Report />} />
           <Route path="/*" element={<h1>Not Found 404</h1>} />
         </Routes>
       </BrowserRouter>

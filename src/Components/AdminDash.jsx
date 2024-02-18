@@ -29,6 +29,8 @@ import Calander from "./SubComponets/Calander";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import BasicDocument from "../libs/Report/Helloworld";
+import { Link } from "react-router-dom";
 
 
 export default function AdminDash() {
@@ -199,6 +201,7 @@ export default function AdminDash() {
             window.location.reload();
         });
     }
+
 
 
     const Fetchreqreport = () => {
@@ -396,6 +399,7 @@ export default function AdminDash() {
         });
     }
     const handlereportConfirm = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
+        console.log(id_project_file_paths, comment, id_project_status_title, id_project_status);
         if (confirm("ยืนยันการดำเนินการ")) {
             axios.post('resources/admin/reqreport/approve',
                 {
@@ -405,7 +409,7 @@ export default function AdminDash() {
                 }
             ).then((response) => {
                 console.log(response);
-                window.location.reload();
+                // window.location.reload();
             });
         } else {
             null
@@ -439,27 +443,43 @@ export default function AdminDash() {
         });
     }
 
+    const openDoc = (id, selectReport) => {
+        window.open(`/testreport/${id}/${selectReport}`);
+    }
+
+    const openDocWidget = (id, selectReport) => {
+        if (window.innerWidth < 900) {
+            setPdfUrl(null)
+            window.open(`/testreport/${id}/${selectReport}`);
+        }
+        else {
+            setPdfUrl(`/testreport/${id}/${selectReport}`);
+        }
+    }
+
+
 
     return (
         <>
-            <FormControl sx={{ m: 1, mt: 2, minWidth: 120 }} size="small">
-                <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    สถานะ
-                </InputLabel>
-                <NativeSelect
-                    defaultValue={21}
-                    inputProps={{
-                        name: 'status_code',
-                        id: 'uncontrolled-native',
-                    }}
-                    onChange={(e) => { setSelectStatus_code(e.target.value) }}
-                >
-                    <option value={21}>รอดำเนินการ</option>
-                    <option value={18}>ไม่สำเร็จ</option>
-                </NativeSelect>
-            </FormControl>
+
             <Grid container spacing={2}>
-                <Grid item xs={12} md={12} lg={6}>
+                <Grid sx={{ height: '100vh', overflowY: 'scroll' }} item xs={12} md={12} lg={6}>
+                    <FormControl sx={{ m: 1, mt: 2, minWidth: 120 }} size="small">
+                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                            สถานะ
+                        </InputLabel>
+                        <NativeSelect
+                            defaultValue={21}
+                            inputProps={{
+                                name: 'status_code',
+                                id: 'uncontrolled-native',
+                            }}
+                            onChange={(e) => { setSelectStatus_code(e.target.value) }}
+                        >
+                            <option value={21}>รอดำเนินการ</option>
+                            <option value={18}>ไม่สำเร็จ</option>
+                        </NativeSelect>
+                    </FormControl>
                     <Accordion>
                         <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
                             <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>ยื่นสอบหัวข้อ</Typography>
@@ -482,10 +502,10 @@ export default function AdminDash() {
                                             <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                             {
                                                 file.staus_code == 21 ?
-                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.doc_status_name_title}</Typography>
+                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.id_project}   {file.doc_status_name_title}</Typography>
                                                     :
                                                     file.staus_code == 18 ?
-                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.id_project}   {file.doc_status_name_title}</Typography>
                                                         :
                                                         null
                                             }
@@ -600,10 +620,10 @@ export default function AdminDash() {
                                             <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                             {
                                                 file.staus_code == 21 ?
-                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.doc_status_name_title}</Typography>
+                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.id_project}   {file.doc_status_name_title}</Typography>
                                                     :
                                                     file.staus_code == 18 ?
-                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.id_project}   {file.doc_status_name_title}</Typography>
                                                         :
                                                         null
                                             }
@@ -719,10 +739,10 @@ export default function AdminDash() {
                                             <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                             {
                                                 file.staus_code == 21 ?
-                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.doc_status_name_title}</Typography>
+                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.id_project}   {file.doc_status_name_title}</Typography>
                                                     :
                                                     file.staus_code == 18 ?
-                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.doc_status_name_title}</Typography>
+                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.id_project}   {file.doc_status_name_title}</Typography>
                                                         :
                                                         null
                                             }
@@ -935,7 +955,7 @@ export default function AdminDash() {
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบ</Typography>
                                 </AccordionSummary>
                                 {projectProcessWaitRecord.map((file, index) => (
-                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 1) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
@@ -954,7 +974,7 @@ export default function AdminDash() {
                                             justifyContent="flex-end"
                                             alignItems="center"
                                             spacing={2} sx={{ mt: 2.5, mr: 2 }}>
-                                            <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
+                                            <Button onClick={() => { openDoc(file.id_project, 1) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
                                         </Stack>
                                         <Stack
                                             direction="row"
