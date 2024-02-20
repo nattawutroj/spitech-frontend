@@ -3,8 +3,6 @@ import { RiQuillPenLine, RiSurveyLine } from "react-icons/ri";
 import { BsListColumnsReverse } from "react-icons/bs";
 import { LiaObjectGroup } from "react-icons/lia";
 import { PiBookBookmark } from "react-icons/pi";
-import { SlNotebook } from "react-icons/sl";
-import { CiBoxList } from "react-icons/ci";
 import { MdOutlineMeetingRoom } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import Item from '@mui/material/Grid'
@@ -12,7 +10,6 @@ import Grid from '@mui/material/Grid'
 
 
 const settings = () => {
-    const URL = '/admintor/settings'
     return (
         <div className="Settings_Container">
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent={'center'}>
@@ -29,7 +26,7 @@ const settings = () => {
                     </Link></Item>
                 </Grid>
                 <Grid item xs={4} sm={4} md={3} mb={2}>
-                    <Item><Link to='/subject'>
+                    <Item><Link to='../settings/subject'>
                         <div className="Setting_Menu">
                             <div className="title">
                                 วิชาเรียน
@@ -41,7 +38,7 @@ const settings = () => {
                     </Link></Item>
                 </Grid>
                 <Grid item xs={4} sm={4} md={3} mb={2}>
-                    <Item><Link to='/course'>
+                    <Item><Link to='../settings/course'>
                         <div className="Setting_Menu">
                             <div className="title">
                                 หลักสูตร
@@ -53,7 +50,7 @@ const settings = () => {
                     </Link></Item>
                 </Grid>
                 <Grid item xs={4} sm={4} md={3} mb={2}>
-                    <Item><Link to='/major'>
+                    <Item><Link to='../settings/major'>
                         <div className="Setting_Menu">
                             <div className="title">
                                 สาขาวิชา
@@ -65,7 +62,7 @@ const settings = () => {
                     </Link></Item>
                 </Grid>
                 <Grid item xs={4} sm={4} md={3} mb={2}>
-                    <Item><Link to='/department'>
+                    <Item><Link to='../settings/department'>
                         <div className="Setting_Menu">
                             <div className="title">
                                 ภาควิชา
@@ -77,7 +74,7 @@ const settings = () => {
                     </Link></Item>
                 </Grid>
                 <Grid item xs={4} sm={4} md={3} mb={2}>
-                    <Item><Link to='/news'>
+                    <Item><Link to='../settings/news'>
                         <div className="Setting_Menu">
                             <div className="title">
                                 ข่าวสาร
@@ -89,7 +86,7 @@ const settings = () => {
                     </Link></Item>
                 </Grid>
                 <Grid item xs={4} sm={4} md={3} mb={2}>
-                    <Item><Link to='/room'>
+                    <Item><Link to='../settings/room'>
                         <div className="Setting_Menu">
                             <div className="title">
                                 ห้องสอบ
