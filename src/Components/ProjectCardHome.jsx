@@ -115,7 +115,10 @@ export default function ProjectCard({ projectinfo, setEditMode }) {
                                         {
                                             member.map((data, index) => (
                                                 (data.id_project === item.id_project) ?
-                                                    <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index}>{countStd++}{data.student_code + ' ' + data.first_name_th + ' ' + data.last_name_th}</Typography>
+                                                    (
+                                                        countStd++,
+                                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index}>{data.student_code + ' ' + data.first_name_th + ' ' + data.last_name_th}</Typography>
+                                                    )
                                                     : ''
                                             ))
                                         }
@@ -195,18 +198,18 @@ export default function ProjectCard({ projectinfo, setEditMode }) {
                                         </Typography>
                                         {
                                             item.id_project_status_title === 3 ?
-                                            <Button onClick={() => { openDoc(item.id_project, 0) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
-                                            : ''
+                                                <Button onClick={() => { openDoc(item.id_project, 0) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
+                                                : ''
                                         }
                                         {
                                             item.id_project_status_title === 8 ?
-                                            <Button onClick={() => { openDoc(item.id_project, 10) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
-                                            : ''
+                                                <Button onClick={() => { openDoc(item.id_project, 10) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
+                                                : ''
                                         }
                                         {
                                             item.id_project_status_title === 12 ?
-                                            <Button onClick={() => { openDoc(item.id_project, 100) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
-                                            : ''
+                                                <Button onClick={() => { openDoc(item.id_project, 100) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
+                                                : ''
                                         }
                                     </Stack>
                                     : ''

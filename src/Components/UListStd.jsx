@@ -10,7 +10,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import SyncLockIcon from '@mui/icons-material/SyncLock';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { ProfileContext } from '../StudentDash';
-import { Modal } from '@mui/material';
+import { Modal, Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 import { Button } from '@mui/material';
@@ -18,14 +18,15 @@ import { Avatar } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { TextField } from '@mui/material';
 import axios from '../libs/Axios';
-
+import { Grid } from '@mui/material';
+import { MenuItem } from '@mui/material';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '25%',
+    width: '50%',
     height: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
@@ -52,6 +53,10 @@ const Userlist = ({ Open, setOpen }) => {
         setPasswordchangeOpen(false);
     }
 
+    const handleClosePro = () => {
+        setprofilechangeOpen(false);
+    }
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
@@ -59,9 +64,14 @@ const Userlist = ({ Open, setOpen }) => {
         window.location.reload();
     }
 
+    const [majorCode, setMajorCode] = React.useState([]);
+    const [nametitle, setNametitle] = React.useState([]);
+
 
     const [errAlert, setErrAlert] = React.useState(false);
     const [passwordchangeOpen, setPasswordchangeOpen] = React.useState(false);
+
+    const [profilechangeOpen, setprofilechangeOpen] = React.useState(false);
     const handleChangPassword = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -79,7 +89,7 @@ const Userlist = ({ Open, setOpen }) => {
                     alert('เปลี่ยนรหัสผ่านสำเร็จ');
                     handleLogout();
                 }
-            }).catch ((err) => {
+            }).catch((err) => {
                 console.log(err);
             })
         }
@@ -88,6 +98,63 @@ const Userlist = ({ Open, setOpen }) => {
         }
         console.log(datalist);
     }
+
+    React.useEffect(() => {
+        axios.get('/resources/public/major')
+            .then(res => {
+                setMajorCode(prevMajorCode => {
+                    const newMajorCode = res.data.data.map(item => ({
+                        label: item.major_code + ' ' + item.major_name,
+                        value: item.major_code
+                    }));
+                    return [...prevMajorCode, ...newMajorCode];
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
+        axios.get('/resources/public/name_title')
+            .then(res => {
+                setNametitle(prevNametitle => {
+                    const nameTitles = res.data.data.map(item => ({
+                        label: item.name_title_th,
+                        value: item.id_name_title
+                    }));
+                    return [...prevNametitle, ...nameTitles];
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, []);
+
+    const [selectedMajor, setSelectedMajor] = React.useState(null);
+    const [selectedTitle, setSelectedTitle] = React.useState(null);
+    React.useEffect(() => {
+        setSelectedTitle(profile.id_name_title);
+        setSelectedMajor(profile.major_code);
+    }, [profile]);
+
+
+    const [editProfile, setEditProfile] = React.useState(profile);
+
+
+    console.log(editProfile);
+
+    const handleInfoChangeNT = (event) => {
+        setEditProfile({ ...editProfile, id_name_title: event.target.value });
+    }
+
+    const handleInfoChange = (event) => {
+        setEditProfile({ ...editProfile, [event.target.name]: event.target.value });
+    }
+
+    const handleMajorChange = (event) => {
+        setEditProfile({ ...editProfile, major_code: event.target.value });
+    }
+
+
 
     return (
         <React.Fragment>
@@ -99,13 +166,13 @@ const Userlist = ({ Open, setOpen }) => {
             </ListItemButton>
             <Collapse in={Open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton onClick={() => setprofilechangeOpen(true)} sx={{ pl: 4 }}>
                         <ListItemIcon>
                             <PermContactCalendarIcon />
                         </ListItemIcon>
                         <ListItemText primary="Profile" />
                     </ListItemButton>
-                    <ListItemButton  onClick={() => setPasswordchangeOpen(true)} sx={{ pl: 4 }}>
+                    <ListItemButton onClick={() => setPasswordchangeOpen(true)} sx={{ pl: 4 }}>
                         <ListItemIcon>
                             <SyncLockIcon />
                         </ListItemIcon>
@@ -120,68 +187,247 @@ const Userlist = ({ Open, setOpen }) => {
                 <ListItemText primary="Logout" />
             </ListItemButton>
             <Modal
-                    open={passwordchangeOpen}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        <Box
-                            sx={{
-                                my: 12,
-                                mt: 3,
-                                mx: 4,
-                                mr: 4,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                            }}
-                        >
+                open={passwordchangeOpen}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Box
+                        sx={{
+                            my: 12,
+                            mt: 3,
+                            mx: 4,
+                            mr: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
 
-                            <Avatar sx={{ m: 3, bgcolor: 'secondary.main' }}>
-                                <LockOutlinedIcon />
-                            </Avatar>
-                            <Typography component="h1" variant="h5">
-                                เปลี่ยนรหัสผ่าน
-                            </Typography>
-                            <Box component="form" noValidate onSubmit={handleChangPassword} sx={{ mt: 1 }}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="repassword1"
-                                    label="Password"
-                                    type='password'
-                                    name="repassword1"
-                                    autoFocus
-                                    error={errAlert}
-                                    helperText={errAlert ? 'รหัสผ่านไม่ตรงกัน' : ''}
-                                />
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="repassword2"
-                                    label="Re-Password"
-                                    type="password"
-                                    id="repassword2"
-                                    autoComplete="current-password"
-                                    error={errAlert}
-                                    helperText={errAlert ? 'รหัสผ่านไม่ตรงกัน' : ''}
-                                />
+                        <Avatar sx={{ m: 3, bgcolor: 'secondary.main' }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            เปลี่ยนรหัสผ่าน
+                        </Typography>
+                        <Box component="form" noValidate onSubmit={handleChangPassword} sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="repassword1"
+                                label="Password"
+                                type='password'
+                                name="repassword1"
+                                autoFocus
+                                error={errAlert}
+                                helperText={errAlert ? 'รหัสผ่านไม่ตรงกัน' : ''}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="repassword2"
+                                label="Re-Password"
+                                type="password"
+                                id="repassword2"
+                                autoComplete="current-password"
+                                error={errAlert}
+                                helperText={errAlert ? 'รหัสผ่านไม่ตรงกัน' : ''}
+                            />
 
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ mt: 3, mb: 2 }}
-                                >
-                                    Change Password
-                                </Button>
-                            </Box>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Change Password
+                            </Button>
                         </Box>
                     </Box>
-                </Modal>
+                </Box>
+            </Modal>
+            <Modal
+                open={profilechangeOpen}
+                onClose={handleClosePro}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography variant="h6" gutterBottom>
+                        ข้อมูลนักศึกษา
+                    </Typography>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="student_code"
+                                name="student_code"
+                                label="รหัสนักศึกษา"
+                                disabled={true}
+                                defaultValue={profile.student_code}
+                                fullWidth
+                                variant="standard"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="id_name_title"
+                                name="id_name_title"
+                                label="คำนำหน้า"
+                                helperText="กรุณาเลือกคำนำหน้า"
+                                select
+                                fullWidth
+                                variant="standard"
+                                value={selectedTitle} // ต้องมี value attribute
+                                onChange={handleInfoChangeNT}
+                            >
+                                {nametitle.map((option, index) => (
+                                    <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="first_name_th"
+                                name="first_name_th"
+                                label="ชื่อ"
+                                fullWidth
+                                variant="standard"
+                                defaultValue={profile.first_name_th}
+                                disabled={true}
+                                onChange={handleInfoChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="last_name_th"
+                                name="last_name_th"
+                                label="นามสกุล"
+                                fullWidth
+                                variant="standard"
+                                defaultValue={profile.last_name_th}
+                                disabled={true}
+                                onChange={handleInfoChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="first_name_en"
+                                name="first_name_en"
+                                label="Name (English)"
+                                defaultValue={profile.first_name_en}
+                                fullWidth
+                                variant="standard"
+                                onChange={handleInfoChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                defaultValue={profile.last_name_en}
+                                id="last_name_en"
+                                name="last_name_en"
+                                label="Surname (English)"
+                                fullWidth
+                                variant="standard"
+                                onChange={handleInfoChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                id="email"
+                                name="email"
+                                label="Email"
+                                defaultValue={profile.email}
+                                fullWidth
+                                variant="standard"
+                                onChange={handleInfoChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                defaultValue={profile.address}
+                                id="address"
+                                name="address"
+                                label="Address"
+                                fullWidth
+                                variant="standard"
+                                onChange={handleInfoChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                defaultValue={profile.phone}
+                                id="phone"
+                                name="phone"
+                                label="เบอร์โทรศัพท์"
+                                fullWidth
+                                variant="standard"
+                                onChange={handleInfoChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="major_code"
+                                name="major_code"
+                                label="สาขาวิชา"
+                                helperText="กรุณาเลือกสาขาวิชา"
+                                select
+                                fullWidth
+                                variant="standard"
+                                value={selectedMajor} // ต้องมี value attribute
+                                onChange={handleMajorChange}
+                            >
+                                {majorCode.map((option, index) => (
+                                    <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
+                                ))}
+                            </TextField>
+                            {console.log(profile)}
+                        </Grid>
+                    </Grid>
+
+                    <Button
+                        type="submit"
+                        onClick={() => {
+                            axios.put('/user/profile',
+                                {
+                                    student_code: profile.student_code,
+                                    id_name_title: editProfile.id_name_title,
+                                    first_name_en: editProfile.first_name_en,
+                                    last_name_en: editProfile.last_name_en,
+                                    email: editProfile.email,
+                                    address: editProfile.address,
+                                    phone: editProfile.phone,
+                                    major_code: editProfile.major_code
+                                }
+                            ).then((res) => {
+                                if (res.status === 200) {
+                                    console.log(res);
+                                    setprofilechangeOpen(!profilechangeOpen);
+                                    alert('แก้ไขข้อมูลสำเร็จ');
+                                    handleLogout();
+                                }
+                            }).catch((err) => {
+                                console.log(err);
+                            })
+                        }
+                        }
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Save
+                    </Button>
+                </Box>
+            </Modal>
         </React.Fragment >
     );
 }
