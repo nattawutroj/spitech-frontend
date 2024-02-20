@@ -144,6 +144,7 @@ const Userlist = ({ Open, setOpen }) => {
 
     const handleInfoChangeNT = (event) => {
         setEditProfile({ ...editProfile, id_name_title: event.target.value });
+        setSelectedTitle(event.target.value);
     }
 
     const handleInfoChange = (event) => {
@@ -152,6 +153,7 @@ const Userlist = ({ Open, setOpen }) => {
 
     const handleMajorChange = (event) => {
         setEditProfile({ ...editProfile, major_code: event.target.value });
+        setSelectedMajor(event.target.value);
     }
 
 
