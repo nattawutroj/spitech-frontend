@@ -150,6 +150,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
+                                    {console.log(file)}
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                     {
                                         file.staus_code == 21 ?

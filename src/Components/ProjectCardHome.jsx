@@ -8,6 +8,7 @@ import { Button, Card, Stack } from '@mui/material';
 import { Edit, Home } from '@mui/icons-material';
 import axios from '../libs/Axios';
 import FileSending from './SubComponets/FileSending';
+import { Print } from '@mui/icons-material';
 
 export default function ProjectCard({ projectinfo, setEditMode }) {
     const [member, setMember] = React.useState([]);
@@ -28,6 +29,10 @@ export default function ProjectCard({ projectinfo, setEditMode }) {
         fetchData();
         fetchStaff();
     }, [projectinfo]);
+
+    const openDoc = (id, selectReport) => {
+        window.open(`/testreport/${id}/${selectReport}`);
+    }
 
     const search = async (item) => {
         try {
@@ -179,6 +184,33 @@ export default function ProjectCard({ projectinfo, setEditMode }) {
                                     </Stack>
                                 </Stack>
                             </Card>
+                            {
+                                item.id_project_status_title === 3 || item.id_project_status_title === 8 || item.id_project_status_title === 12 ?
+                                    <Stack direction="row"
+                                        justifyContent="flex-end"
+                                        alignItems="center"
+                                        spacing={2} sx={{ mt: 2.5, mr: 2 }}>
+                                        <Typography variant="bodyๅ" color="text.secondary">
+                                            โปรดพิมพ์เอกสารและนำส่งที่ห้องภาควิชา
+                                        </Typography>
+                                        {
+                                            item.id_project_status_title === 3 ?
+                                            <Button onClick={() => { openDoc(item.id_project, 0) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
+                                            : ''
+                                        }
+                                        {
+                                            item.id_project_status_title === 8 ?
+                                            <Button onClick={() => { openDoc(item.id_project, 10) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
+                                            : ''
+                                        }
+                                        {
+                                            item.id_project_status_title === 12 ?
+                                            <Button onClick={() => { openDoc(item.id_project, 100) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>ใบพิมพ์ยื่นสอบ</Button>
+                                            : ''
+                                        }
+                                    </Stack>
+                                    : ''
+                            }
                         </AccordionDetails>
                         {
                             <FileSending text={"ส่งไฟล์ ทก.01"} itemprojectinfo={item} id_project={item.id_project} />

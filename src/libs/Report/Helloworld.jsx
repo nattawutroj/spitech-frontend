@@ -16,7 +16,7 @@ import logoKMUTNB from '../../assets/logoKMUTNB.png';
 import Checkbox from '../../assets/checkbox.jpg';
 
 Font.register({ family: 'THSarabunNew', fonts: [{ src: THSN }, { src: THSN_B, fontWeight: 'bold' }] });
-
+var nullline = 0;
 // Create styles
 const styles = StyleSheet.create({
     title: {
@@ -220,7 +220,7 @@ function BasicDocument({ projectinfo, member, staff, boss, selectReport }) {
                 {/*render a single page*/}
                 <Page size="A4" style={styles.page}>
                     {
-                        selectReport === 1 ?
+                        selectReport === 1 || selectReport === 61 ||  selectReport === 101 ?
                             <>
                                 <View style={styles.section}>
                                     <Header selectReport={selectReport} />
@@ -285,8 +285,8 @@ function BasicDocument({ projectinfo, member, staff, boss, selectReport }) {
                             null
                     }
                     {
-                        selectReport === 0 ?
-                            <>
+                        selectReport === 0 || selectReport === 10 ||  selectReport === 100 ?
+                        <>
                                 <View style={styles.section}>
                                     <Header selectReport={selectReport} />
                                 </View>
@@ -326,8 +326,36 @@ function Header({ selectReport }) {
 
                     }
                     {
+                        (selectReport === 61) ?
+                            <Text style={styles.title}>แบบประเมินการสอบหกสิบโครงงานพิเศษ</Text>
+                            :
+                            null
+
+                    }
+                    {
+                        (selectReport === 101) ?
+                            <Text style={styles.title}>แบบประเมินการสอบร้อยหัวข้อโครงงานพิเศษ</Text>
+                            :
+                            null
+
+                    }
+                    {
                         (selectReport === 0) ?
                             <Text style={styles.title}>แบบเสนอหัวข้อโครงงานพิเศษ (ปริญญานิพนธ์)</Text>
+                            :
+                            null
+
+                    }
+                    {
+                        (selectReport === 10) ?
+                            <Text style={styles.title}>แบบเสนอยื่นสอบหกสิบโครงงานพิเศษ (ปริญญานิพนธ์)</Text>
+                            :
+                            null
+
+                    }
+                    {
+                        (selectReport === 100) ?
+                            <Text style={styles.title}>แบบเสนอยื่นสอบร้อยโครงงานพิเศษ (ปริญญานิพนธ์)</Text>
                             :
                             null
 
@@ -392,7 +420,7 @@ function Information({ projectinfo, member, staff }) {
                         (item.project_staff_position_title === 'ปรึกษา') ?
                             <View style={styles.row} key={index}>
                                 <Text style={{ width: '5%', textAlign: 'right', marginRight: 50 }}></Text>
-                                <Text style={{ width: '90%', textAlign: 'left' }}>{index + 1}. {item.name_title_th} {item.first_name_th} {item.last_name_th}</Text>
+                                <Text style={{ width: '90%', textAlign: 'left' }}>{item.name_title_th} {item.first_name_th} {item.last_name_th}</Text>
                                 <Text style={{ width: '5%', textAlign: 'right' }}></Text>
                             </View>
                             :
@@ -493,7 +521,7 @@ function Information2({ projectinfo, member, staff }) {
                 <Text style={{ width: '2%' }}> </Text>
                 <Text style={{ width: '4%' }}> </Text>
             </View>
-            <View style={[styles.row, { marginTop: 20 }]}>
+            <View style={[styles.row, { marginTop: 5 }]}>
                 <Text style={{ width: '55%', fontWeight: 'bold' }}>มีความประสงค์จะขอสอบโครงงานพิเศษ (ปริญญานิพนธ์) หลักสูตร</Text>
                 <Text style={{ width: '2%' }}> </Text>
                 <Text style={{ width: '37%' }}>{member[0].course_name}</Text>
@@ -513,7 +541,7 @@ function Information2({ projectinfo, member, staff }) {
                 <Text style={{ width: '20%', textAlign: 'left', fontWeight: 'bold' }}>รหัสโครงงานพิเศษ</Text>
                 <Text style={{ width: '80%', }}>{projectinfo.id_project}</Text>
             </View>
-            <View style={[styles.row, { marginTop: 10 }]}>
+            <View style={[styles.row, { marginTop: 0 }]}>
                 <Text style={{ width: '33%', textAlign: 'right', fontWeight: 'bold', marginRight: 50 }}>ชื่อโครงงาน (ภาษาไทย)</Text>
                 <Text style={{ width: '67%', }}>{projectinfo.project_title_th}</Text>
             </View>
@@ -608,13 +636,16 @@ function Information2({ projectinfo, member, staff }) {
                     <View style={styles.row}>
                         <Text style={{ width: '5%', textAlign: 'right', marginRight: 50 }}></Text>
                         <Text style={{ width: '90%', textAlign: 'left' }}>ไม่มีที่ปรึกษาร่วม</Text>
+                        {
+                            nullline++
+                        }
                         <Text style={{ width: '5%', textAlign: 'right' }}></Text>
                     </View>
                     :
                     null
             }
             <View style={styles.row}>
-                <Text style={{ width: '5%', textAlign: 'right', marginRight: 30, marginTop: 50 }}></Text>
+                <Text style={{ width: '5%', textAlign: 'right', marginRight: 30, marginTop: 25 }}></Text>
                 <Text style={{ width: '90%', textAlign: 'left', fontWeight: 'bold' }}>จึงเรียนมาเพื่อโปรดพิจารณา</Text>
                 <Text style={{ width: '5%', textAlign: 'right' }}></Text>
             </View>
@@ -685,9 +716,20 @@ function Examreport2() {
 function Singature0() {
     return (
         <>
-            <View style={styles.row}>
-                <Text style={{ width: '5%', textAlign: 'right', marginRight: 50 }}> </Text>
-            </View>
+        {
+            console.log(nullline)
+        }
+            {
+                nullline === 1 ?
+                    <View style={styles.row}>
+                        <Text style={{ width: '5%', textAlign: 'right', marginTop: 20 }}> </Text>
+                    </View>
+                    : 
+                    <View style={styles.row}>
+                        <Text style={{ width: '5%', textAlign: 'right', marginTop: 5 }}> </Text>
+                    </View>
+            }
+
             <View style={styles.row}>
                 <Text style={{ width: '5%', textAlign: 'right', marginRight: 50 }}></Text>
                 <Text style={{ width: '40%', textAlign: 'left' }}></Text>

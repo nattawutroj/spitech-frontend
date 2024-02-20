@@ -1341,7 +1341,7 @@ export default function AdminDash() {
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบหกสิบ</Typography>
                                 </AccordionSummary>
                                 {projectProcessWaitRecord60.map((file, index) => (
-                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 1) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 61) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
@@ -1360,7 +1360,7 @@ export default function AdminDash() {
                                             justifyContent="flex-end"
                                             alignItems="center"
                                             spacing={2} sx={{ mt: 2.5, mr: 2 }}>
-                                            <Button onClick={() => { openDoc(file.id_project, 1) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
+                                            <Button onClick={() => { openDoc(file.id_project, 61) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
                                         </Stack>
                                         <Stack
                                             direction="row"
@@ -1399,7 +1399,7 @@ export default function AdminDash() {
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบร้อย</Typography>
                                 </AccordionSummary>
                                 {projectProcessWaitRecord100.map((file, index) => (
-                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 1) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 101) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
@@ -1418,7 +1418,7 @@ export default function AdminDash() {
                                             justifyContent="flex-end"
                                             alignItems="center"
                                             spacing={2} sx={{ mt: 2.5, mr: 2 }}>
-                                            <Button onClick={() => { openDoc(file.id_project, 1) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
+                                            <Button onClick={() => { openDoc(file.id_project, 101) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
                                         </Stack>
                                         <Stack
                                             direction="row"

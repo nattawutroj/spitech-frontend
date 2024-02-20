@@ -11,7 +11,7 @@ function App() {
     const [staff, setStaff] = React.useState([]);
 
     async function docprojectinfomation(id) {
-        const response = await axios.get('/resources/admin/projectinfomation', {
+        const response = await axios.get('/resources/public/projectinfomation', {
             params: {
                 id_project: id
             }
@@ -25,7 +25,7 @@ function App() {
     }
 
     async function docmember(id) {
-        const response = await axios.get('/resources/admin/projectinfomation/student', {
+        const response = await axios.get('/resources/public/projectinfomation/student', {
             params: {
                 id_project: id
             }
@@ -34,7 +34,7 @@ function App() {
     }
 
     async function docstaff(id) {
-        const response = await axios.get('/resources/admin/projectinfomation/staff', {
+        const response = await axios.get('/resources/public/projectinfomation/staff', {
             params: {
                 id_project: id
             }
@@ -70,6 +70,7 @@ function App() {
         // แสดง loader หรือข้อความ loading ตามที่คุณต้องการ
         return <div>Loading...</div>;
     }
+    console.log(member);
     return (
         <div className="App">
             <BasicDocument projectinfo={projectinfo} boss={boss} member={member} staff={staff} selectReport={parseInt(selectReport)} />
