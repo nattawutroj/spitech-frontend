@@ -21,6 +21,15 @@ import RouteStudent from './Components/TableStuden'
 import RouteTeacher from './Components/TableTeaher'
 import RouteAdminDash from './Components/AdminDash'
 import Record from './Components/Record';
+import Course from './Components/SettingsRotue/Course';
+import Department from './Components/SettingsRotue/Department';
+import NameTitle from './Components/SettingsRotue/NameTitle';
+import Major from './Components/SettingsRotue/Major';
+import Subject from './Components/SettingsRotue/Subject';
+import Room from './Components/SettingsRotue/Room';
+import News from './Components/SettingsRotue/News';
+import Semester from './Components/SettingsRotue/semester';
+import Boss from './Components/SettingsRotue/Boss';
 
 const drawerWidth = 240;
 
@@ -54,8 +63,7 @@ const defaultTheme = createTheme();
 export const ProfileContext = React.createContext();
 export default function Dashboard() {
     const role = localStorage.getItem('role');
-    if(role !== 'admin')
-    {
+    if (role !== 'admin') {
         localStorage.removeItem('token')
     }
 
@@ -116,7 +124,17 @@ export default function Dashboard() {
                                 <Route path="add/teacher" element={<RouteTeacher />} />
                                 <Route path="add/student" element={<RouteStudent />} />
                                 <Route path="add/studentgrops" element={<RouteStdGrops />} />
+                                <Route path="add/semester" element={<Semester />} />
+                                <Route path="add/boss" element={<Boss />} />
                                 <Route path="record" element={<Record />} />
+                                <Route path="settings/course" element={<Course />} />
+                                <Route path="settings/department" element={<Department />} />
+                                <Route path="settings/name_titile" element={<NameTitle />} />
+                                <Route path="settings/major" element={<Major />} />
+                                <Route path="settings/subject" element={<Subject />} />
+                                <Route path="settings/room" element={<Room />} />
+                                <Route path="settings/news" element={<News />} />
+
                                 <Route path='/' element={<RouteAdminDash />} />
                                 <Route path='*' element={<h1>Not Found 404</h1>} />
                             </Routes>
