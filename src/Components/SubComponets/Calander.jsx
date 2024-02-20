@@ -57,12 +57,16 @@ export default function WeekPicker({ ajid, idprojectstatustitle }) {
     const [isLoaded, setIsLoaded] = React.useState(false);
     const [reseveroom, setReseveroom] = React.useState(null);
 
+
     const fetchRoom = () => {
         axios.get('/resources/admin/room')
             .then(res => {
+                console.log("1")
                 setRoom(res.data.result)
             })
             .catch(err => {
+
+                console.log("2")
                 console.log(err);
             });
     }
@@ -76,6 +80,8 @@ export default function WeekPicker({ ajid, idprojectstatustitle }) {
     };
 
     const SChecker = () => {
+        console.log(ajid)
+        console.log(idprojectstatustitle)
         axios.get('/resources/admin/room/schedule', {
             params: {
                 id_project: ajid,
@@ -120,6 +126,7 @@ export default function WeekPicker({ ajid, idprojectstatustitle }) {
                                 sx={{ mt: 3, mb: 1}}
                                 fullWidth
                                 onClick={() => {
+                                    console.log(reseveroom[0].id_schedule);
                                     confirm('คุณต้องการยกเลิกการจองหรือไม่') == true ?
                                     axios.delete('/resources/admin/room/schedule', {
                                         params: {
@@ -127,6 +134,7 @@ export default function WeekPicker({ ajid, idprojectstatustitle }) {
                                         }
                                     })
                                         .then(res => {
+                                            console.log(res);
                                             SChecker();
                                         })
                                         .catch(err => {
@@ -255,7 +263,7 @@ export default function WeekPicker({ ajid, idprojectstatustitle }) {
                                                                                     date: item.date,
                                                                                     slot: slot.slot,
                                                                                     id_project: ajid,
-                                                                                    id_test_catagory: 1
+                                                                                    id_test_catagory: idprojectstatustitle
                                                                                 })
                                                                                     .then(res => {
                                                                                         SChecker();
