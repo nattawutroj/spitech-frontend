@@ -49,10 +49,10 @@ export default function AdminDash() {
             if (file.id_project_status_title == 3) {
                 setLableexam1((prevLableexam1) => prevLableexam1 + 1);
             }
-            if (file.id_project_status_title == 9) {
+            if (file.id_project_status_title == 8) {
                 setLableexam2((prevLableexam2) => prevLableexam2 + 1);
             }
-            if (file.id_project_status_title == 13) {
+            if (file.id_project_status_title == 12) {
                 setLableexam3((prevLableexam3) => prevLableexam3 + 1);
             }
         }
@@ -108,7 +108,11 @@ export default function AdminDash() {
     const [fileList, setFileList] = React.useState([]);
     const [projectProcess, setProjectProcess] = React.useState([]);
     const [projectProcessWaitSchdule, setProjectProcessWaitSchdule] = React.useState([]);
+    const [projectProcessWaitSchdule60, setProjectProcessWaitSchdule60] = React.useState([]);
+    const [projectProcessWaitSchdule100, setProjectProcessWaitSchdule100] = React.useState([]);
     const [projectProcessWaitRecord, setProjetProcessWaitRecord] = React.useState([]);
+    const [projectProcessWaitRecord60, setProjetProcessWaitRecord60] = React.useState([]);
+    const [projectProcessWaitRecord100, setProjetProcessWaitRecord100] = React.useState([]);
     const [expanded, setExpanded] = React.useState(false);
     const [openCancel, setOpenCancel] = React.useState(false);
     const [Canceldatafrom, setCanceldatafrom] = React.useState([]);
@@ -213,6 +217,7 @@ export default function AdminDash() {
             }
         ).then(res => {
             setPdfUrl(null)
+            console.log(res)
             setFileList(res.data.result);
             setExpanded(false);
         }).catch(err => {
@@ -313,6 +318,92 @@ export default function AdminDash() {
                 console.log(err);
             });
     };
+    const FetchProjectProcessWaitSchdule60 = () => {
+        axios.get('resources/admin/projectadminprocess', {
+            params: {
+                project_process: 9
+            }
+        })
+            .then(response => {
+                const projectProcessWaitSchduleData60 = response.data.result.rows;
+
+                // Use Promise.all to handle multiple asynchronous calls
+                const fileLastUpdatePromises = projectProcessWaitSchduleData60.map(item => {
+                    return axios.get('resources/admin/projectfilelast', {
+                        params: {
+                            id_project: item.id_project
+                        }
+                    })
+                        .then(res => res.data.result[0])
+                        .catch(err => {
+                            console.log(err);
+                            return null;
+                        });
+                });
+
+                // Wait for all promises to resolve
+                return Promise.all(fileLastUpdatePromises)
+                    .then(fileLastUpdates => {
+                        // Combine projectProcessWaitSchduleData60 with fileLastUpdates
+                        const combinedData = projectProcessWaitSchduleData60.map((item, index) => ({
+                            ...item,
+                            fileLastUpdate: fileLastUpdates[index]
+                        }));
+                        return combinedData;
+                    });
+            })
+            .then(combinedData => {
+                setPdfUrl(null);
+                setProjectProcessWaitSchdule60(combinedData);
+                setExpanded(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
+    const FetchProjectProcessWaitSchdule100 = () => {
+        axios.get('resources/admin/projectadminprocess', {
+            params: {
+                project_process: 13
+            }
+        })
+            .then(response => {
+                const projectProcessWaitSchduleData100 = response.data.result.rows;
+
+                // Use Promise.all to handle multiple asynchronous calls
+                const fileLastUpdatePromises = projectProcessWaitSchduleData100.map(item => {
+                    return axios.get('resources/admin/projectfilelast', {
+                        params: {
+                            id_project: item.id_project
+                        }
+                    })
+                        .then(res => res.data.result[0])
+                        .catch(err => {
+                            console.log(err);
+                            return null;
+                        });
+                });
+
+                // Wait for all promises to resolve
+                return Promise.all(fileLastUpdatePromises)
+                    .then(fileLastUpdates => {
+                        const combinedData = projectProcessWaitSchduleData100.map((item, index) => ({
+                            ...item,
+                            fileLastUpdate: fileLastUpdates[index]
+                        }));
+                        return combinedData;
+                    });
+            })
+            .then(combinedData => {
+                setPdfUrl(null);
+                setProjectProcessWaitSchdule100(combinedData);
+                setExpanded(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
 
     const FetchProjectProcessWaitRecordExtam = () => {
         axios.get('resources/admin/projectadminprocess', {
@@ -359,6 +450,95 @@ export default function AdminDash() {
             });
     };
 
+    const FetchProjectProcessWaitRecordExtam60 = () => {
+        axios.get('resources/admin/projectadminprocess', {
+            params: {
+                project_process: 10
+            }
+        })
+            .then(response => {
+                const projectProcessWaitRecord60 = response.data.result.rows;
+
+                // Use Promise.all to handle multiple asynchronous calls
+                const fileLastUpdatePromises = projectProcessWaitRecord60.map(item => {
+                    return axios.get('resources/admin/projectfilelast', {
+                        params: {
+                            id_project: item.id_project
+                        }
+                    })
+                        .then(res => res.data.result[0])
+                        .catch(err => {
+                            console.log(err);
+                            return null;
+                        });
+                });
+
+                // Wait for all promises to resolve
+                return Promise.all(fileLastUpdatePromises)
+                    .then(fileLastUpdates => {
+                        // Combine projectProcessWaitRecord60 with fileLastUpdates
+                        const combinedData = projectProcessWaitRecord60.map((item, index) => ({
+                            ...item,
+                            fileLastUpdate: fileLastUpdates[index]
+                        }));
+                        return combinedData;
+                    });
+            })
+            .then(combinedData => {
+                setPdfUrl(null);
+                // setProjectProcessWaitSchdule(prevProjectProcessWaitSchdule => [...prevProjectProcessWaitSchdule, ...combinedData]);
+                setProjetProcessWaitRecord60(combinedData);
+                setExpanded(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+    const FetchProjectProcessWaitRecordExtam100 = () => {
+        axios.get('resources/admin/projectadminprocess', {
+            params: {
+                project_process: 14
+            }
+        })
+            .then(response => {
+                const projectProcessWaitRecord100 = response.data.result.rows;
+
+                // Use Promise.all to handle multiple asynchronous calls
+                const fileLastUpdatePromises = projectProcessWaitRecord100.map(item => {
+                    return axios.get('resources/admin/projectfilelast', {
+                        params: {
+                            id_project: item.id_project
+                        }
+                    })
+                        .then(res => res.data.result[0])
+                        .catch(err => {
+                            console.log(err);
+                            return null;
+                        });
+                });
+
+                // Wait for all promises to resolve
+                return Promise.all(fileLastUpdatePromises)
+                    .then(fileLastUpdates => {
+                        // Combine projectProcessWaitRecord100 with fileLastUpdates
+                        const combinedData = projectProcessWaitRecord100.map((item, index) => ({
+                            ...item,
+                            fileLastUpdate: fileLastUpdates[index]
+                        }));
+                        return combinedData;
+                    });
+            })
+            .then(combinedData => {
+                setPdfUrl(null);
+                // setProjectProcessWaitSchdule(prevProjectProcessWaitSchdule => [...prevProjectProcessWaitSchdule, ...combinedData]);
+                setProjetProcessWaitRecord100(combinedData);
+                setExpanded(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
     const Viewpdf = (id) => {
         handleFileDownload(id);
     }
@@ -372,7 +552,11 @@ export default function AdminDash() {
         Fetchreqreport();
         FetchProjectProcess();
         FetchProjectProcessWaitSchdule();
+        FetchProjectProcessWaitSchdule60();
+        FetchProjectProcessWaitSchdule100();
         FetchProjectProcessWaitRecordExtam();
+        FetchProjectProcessWaitRecordExtam60();
+        FetchProjectProcessWaitRecordExtam100();
     }, [selectstatus_code])
 
     const handlereportCancel = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
@@ -385,6 +569,7 @@ export default function AdminDash() {
     }
 
     const handleCancelcomment = () => {
+        console.log(Canceldatafrom.id_project_file_paths, Cancelcomment, Canceldatafrom.id_project_status_title, Canceldatafrom.id_project_status);
         axios.post('resources/admin/reqreport/prove',
             {
                 id_project_file_paths: Canceldatafrom.id_project_file_paths,
@@ -409,13 +594,14 @@ export default function AdminDash() {
                 }
             ).then((response) => {
                 console.log(response);
-                // window.location.reload();
+                window.location.reload();
             });
         } else {
             null
         }
     }
     const handleCancelcommentUNC = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
+        
         axios.post('resources/admin/reqreport/prove',
             {
                 id_project_file_paths: id_project_file_paths,
@@ -609,14 +795,20 @@ export default function AdminDash() {
                             }
                         </AccordionSummary>
                         {
+                            console.log(fileList)
+                        }
+                        {
                             fileList?.map((file, index) => (
-                                file.id_project_status_title == 9 ?
+                                file.id_project_status_title == 8 ?
                                     <Accordion expanded={expanded === `${file.id_project_file_path}`} onChange={() => { handleChange(`${file.id_project_file_path}`), Viewpdf(file.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >
+                                            {
+                                                console.log(file)
+                                            }
                                             <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                             {
                                                 file.staus_code == 21 ?
@@ -728,8 +920,11 @@ export default function AdminDash() {
                             }
                         </AccordionSummary>
                         {
+                            console.log(fileList)
+                        }
+                        {
                             fileList?.map((file, index) => (
-                                file.id_project_status_title == 13 ?
+                                file.id_project_status_title == 12 ?
                                     <Accordion expanded={expanded === `${file.id_project_file_path}`} onChange={() => { handleChange(`${file.id_project_file_path}`), Viewpdf(file.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
                                         <AccordionSummary
                                             expandIcon={<CloudUploadIcon />}
@@ -926,7 +1121,140 @@ export default function AdminDash() {
                                                                 }
                                                             })
                                                                 .then(res => {
-                                                                    if (res.data.result.length === 0) {
+                                                                    console.log(res.data.result)
+                                                                    if (res.data.result.length === 0 || res.data.result.name == 'error') {
+                                                                        window.alert("คุณยังไม่ได้จัดตารางสอบ")
+                                                                    } else {
+                                                                        // ถ้ามีข้อมูล
+                                                                        handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status)
+                                                                    }
+                                                                })
+                                                                .catch(err => {
+                                                                    console.log(err);
+                                                                });
+                                                        }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                    <Button onClick={() => { handlereportCancel(file.fileLastUpdate.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
+                                                </Stack>
+
+                                            </AccordionDetails>
+                                        }
+                                    </Accordion>
+                                ))}
+                            </Accordion>
+                            :
+                            null
+                    }
+                    {
+                        selectstatus_code == 21 && projectProcessWaitSchdule60.length > 0 ?
+                            <Accordion>
+                                <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอจัดตารางสอบหกสิบ</Typography>
+                                </AccordionSummary>
+                                {projectProcessWaitSchdule60.map((file, index) => (
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสโครงงาน {file.id_project}</Typography>
+                                            <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
+                                        </AccordionSummary>
+
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                        </Stack>
+                                        <ProjectDetail act={act} id={file.id_project} />
+
+                                        <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>จัดตารางสอบ</Button>
+                                        {
+                                            <AccordionDetails >
+                                                <Stack direction="row"
+                                                    justifyContent="flex-end"
+                                                    alignItems="center"
+                                                    spacing={2} sx={{ mt: 2.5 }}>
+                                                    <Button
+                                                        onClick={() => {
+                                                            axios.get('/resources/admin/room/schedule', {
+                                                                params: {
+                                                                    id_project: ajid,
+                                                                    id_project_status_title: idprojectstatustitle
+                                                                }
+                                                            })
+                                                                .then(res => {
+                                                                    if (res.data.result.length === 0 || res.data.result.name == 'error') {
+                                                                        window.alert("คุณยังไม่ได้จัดตารางสอบ")
+                                                                    } else {
+                                                                        // ถ้ามีข้อมูล
+                                                                        handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status)
+                                                                    }
+                                                                })
+                                                                .catch(err => {
+                                                                    console.log(err);
+                                                                });
+                                                        }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                    <Button onClick={() => { handlereportCancel(file.fileLastUpdate.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
+                                                </Stack>
+
+                                            </AccordionDetails>
+                                        }
+                                    </Accordion>
+                                ))}
+                            </Accordion>
+                            :
+                            null
+                    }
+                    {
+                        selectstatus_code == 21 && projectProcessWaitSchdule100.length > 0 ?
+                            <Accordion>
+                                <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอจัดตารางสอบร้อย</Typography>
+                                </AccordionSummary>
+                                {projectProcessWaitSchdule100.map((file, index) => (
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสโครงงาน {file.id_project}</Typography>
+                                            <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
+                                        </AccordionSummary>
+
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                        </Stack>
+                                        <ProjectDetail act={act} id={file.id_project} />
+
+                                        <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>จัดตารางสอบ</Button>
+                                        {
+                                            <AccordionDetails >
+                                                <Stack direction="row"
+                                                    justifyContent="flex-end"
+                                                    alignItems="center"
+                                                    spacing={2} sx={{ mt: 2.5 }}>
+                                                    <Button
+                                                        onClick={() => {
+                                                            axios.get('/resources/admin/room/schedule', {
+                                                                params: {
+                                                                    id_project: ajid,
+                                                                    id_project_status_title: idprojectstatustitle
+                                                                }
+                                                            })
+                                                                .then(res => {
+                                                                    if (res.data.result.length === 0 || res.data.result.name == 'error') {
                                                                         window.alert("คุณยังไม่ได้จัดตารางสอบ")
                                                                     } else {
                                                                         // ถ้ามีข้อมูล
@@ -952,7 +1280,7 @@ export default function AdminDash() {
                         selectstatus_code == 21 && projectProcessWaitRecord.length > 0 ?
                             <Accordion>
                                 <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบ</Typography>
+                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบหัวข้อ</Typography>
                                 </AccordionSummary>
                                 {projectProcessWaitRecord.map((file, index) => (
                                     <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 1) }} key={index} sx={{ mt: 1, width: '100%' }} >
@@ -975,6 +1303,122 @@ export default function AdminDash() {
                                             alignItems="center"
                                             spacing={2} sx={{ mt: 2.5, mr: 2 }}>
                                             <Button onClick={() => { openDoc(file.id_project, 1) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
+                                        </Stack>
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                        </Stack>
+                                        <ProjectDetail act={act} id={file.id_project} />
+
+                                        {/* <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>บันทึกผลการสอบ</Button> */}
+                                        {
+                                            <AccordionDetails >
+                                                <Stack direction="row"
+                                                    justifyContent="flex-end"
+                                                    alignItems="center"
+                                                    spacing={2} sx={{ mt: 2.5 }}>
+                                                    <Button
+                                                        onClick={() => { setA1(file.fileLastUpdate.id_project_file_path), setA2("สำเร็จ"), setA3(file.id_project_status_title), setA4(file.id_project_status), setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setmodalRecord(true) }} variant='contained' color='success' startIcon={<CheckIcon />}>บันทึกผลการสอบ</Button>
+                                                </Stack>
+
+                                            </AccordionDetails>
+                                        }
+                                    </Accordion>
+                                ))}
+                            </Accordion>
+                            :
+                            null
+                    }
+                    {
+                        selectstatus_code == 21 && projectProcessWaitRecord60.length > 0 ?
+                            <Accordion>
+                                <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบหกสิบ</Typography>
+                                </AccordionSummary>
+                                {projectProcessWaitRecord60.map((file, index) => (
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 61) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสโครงงาน {file.id_project}</Typography>
+                                            <Stack direction="column"
+                                                justifyContent="space-between"
+                                            >
+                                                <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
+                                                <Typography sx={{ pt: 0.3 }}>{file.id_project_status_title == 6 ? 'สอบหัวข้อ' : ''}</Typography>
+                                            </Stack>
+                                        </AccordionSummary>
+
+                                        <Stack direction="row"
+                                            justifyContent="flex-end"
+                                            alignItems="center"
+                                            spacing={2} sx={{ mt: 2.5, mr: 2 }}>
+                                            <Button onClick={() => { openDoc(file.id_project, 61) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
+                                        </Stack>
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                        </Stack>
+                                        <ProjectDetail act={act} id={file.id_project} />
+
+                                        {/* <Button onClick={() => { setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setProjectcode(file.id_project), setOpenCalander(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>บันทึกผลการสอบ</Button> */}
+                                        {
+                                            <AccordionDetails >
+                                                <Stack direction="row"
+                                                    justifyContent="flex-end"
+                                                    alignItems="center"
+                                                    spacing={2} sx={{ mt: 2.5 }}>
+                                                    <Button
+                                                        onClick={() => { setA1(file.fileLastUpdate.id_project_file_path), setA2("สำเร็จ"), setA3(file.id_project_status_title), setA4(file.id_project_status), setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setmodalRecord(true) }} variant='contained' color='success' startIcon={<CheckIcon />}>บันทึกผลการสอบ</Button>
+                                                </Stack>
+
+                                            </AccordionDetails>
+                                        }
+                                    </Accordion>
+                                ))}
+                            </Accordion>
+                            :
+                            null
+                    }
+                    {
+                        selectstatus_code == 21 && projectProcessWaitRecord100.length > 0 ?
+                            <Accordion>
+                                <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รอการบันทึกผลการสอบร้อย</Typography>
+                                </AccordionSummary>
+                                {projectProcessWaitRecord100.map((file, index) => (
+                                    <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), openDocWidget(file.id_project, 101) }} key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<CloudUploadIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสโครงงาน {file.id_project}</Typography>
+                                            <Stack direction="column"
+                                                justifyContent="space-between"
+                                            >
+                                                <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
+                                                <Typography sx={{ pt: 0.3 }}>{file.id_project_status_title == 6 ? 'สอบหัวข้อ' : ''}</Typography>
+                                            </Stack>
+                                        </AccordionSummary>
+
+                                        <Stack direction="row"
+                                            justifyContent="flex-end"
+                                            alignItems="center"
+                                            spacing={2} sx={{ mt: 2.5, mr: 2 }}>
+                                            <Button onClick={() => { openDoc(file.id_project, 101) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Print />}>พิมพ์ใบประเมินการสอบ</Button>
                                         </Stack>
                                         <Stack
                                             direction="row"

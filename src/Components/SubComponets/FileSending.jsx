@@ -68,7 +68,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
 
 
     const handleFileUpload = () => {
-        if ((itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) && testcat == 1) {
+        if ((itemprojectinfo.id_project_status_title == 7 ) && testcat == 1) {
             alert('โปรดระบุประเภทการยื่นสอบ')
         }
         else {
@@ -150,6 +150,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
+                                    {console.log(file)}
                                     <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
                                     {
                                         file.staus_code == 21 ?
@@ -226,7 +227,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                     ))}
 
                     {
-                        (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7) ?
+                        (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) ?
                             <Typography variant="h6" gutterBottom component="div">
                                 <Stack sx={{ mt: 2 }} spacing={2} direction="row"
                                     justifyContent="space-around"
@@ -247,7 +248,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                     </Button>
 
                                     {
-                                        (itemprojectinfo.id_project_status_title != 2) ?
+                                        (itemprojectinfo.id_project_status_title == 7) ?
                                             <Box sx={{ minWidth: 200 }}>
                                                 <FormControl fullWidth>
                                                     <InputLabel id="demo-simple-select-label">ประเภทยื่นสอบ</InputLabel>
@@ -370,34 +371,58 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                     </Accordion>
                 </>
                 :
-                (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7) ?
-                    <Typography variant="h6" gutterBottom component="div">
-                        <Stack sx={{ mt: 2 }} spacing={2} direction="row"
-                            justifyContent="center"
-                            alignItems="center">
-                            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                Upload file
-                                <VisuallyHiddenInput
-                                    type="file"
-                                    onChange={handleFileChange}
-                                    accept=".pdf" // Allow only PDF files
-                                />
-                            </Button>
+                (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) ?
+                            <Typography variant="h6" gutterBottom component="div">
+                                <Stack sx={{ mt: 2 }} spacing={2} direction="row"
+                                    justifyContent="space-around"
+                                    alignItems="center"
 
-                            <Typography variant="body2" color="text.secondary">
-                                {file ? file.name : 'No file selected'}
+                                >
+
+                                    <Typography variant="body2" color="text.secondary">
+                                        {file ? file.name : 'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'}
+                                    </Typography>
+                                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                        Upload File
+                                        <VisuallyHiddenInput
+                                            type="file"
+                                            onChange={handleFileChange}
+                                            accept=".pdf" // Allow only PDF files
+                                        />
+                                    </Button>
+
+                                    {
+                                        (itemprojectinfo.id_project_status_title == 7) ?
+                                            <Box sx={{ minWidth: 200 }}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel id="demo-simple-select-label">ประเภทยื่นสอบ</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={testcat}
+                                                        label="ประเภทยื่นสอบ"
+                                                        onChange={handleChangetestcat}
+                                                    >
+                                                        <MenuItem value={1}>โปรดระบุ</MenuItem>
+                                                        <MenuItem value={2}>ยื่นสอบหกสิบ</MenuItem>
+                                                        <MenuItem value={3}>ยื่นสอบร้อย</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                            :
+                                            null
+                                    }
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleFileUpload}
+                                        disabled={!file} // Disable the button if no file selected
+                                    >
+                                        ยื่นสอบ
+                                    </Button>
+                                </Stack>
                             </Typography>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleFileUpload}
-                                disabled={!file} // Disable the button if no file selected
-                            >
-                                Send file
-                            </Button>
-                        </Stack>
-                    </Typography>
-                    : ''
+                            : ''
             }
 
         </>
