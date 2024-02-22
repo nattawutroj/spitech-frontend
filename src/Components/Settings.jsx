@@ -2,7 +2,7 @@ import '../assets/css/Settings.css'
 import { RiQuillPenLine, RiSurveyLine } from "react-icons/ri";
 import { BsListColumnsReverse } from "react-icons/bs";
 import { LiaObjectGroup } from "react-icons/lia";
-import { PiBookBookmark } from "react-icons/pi";
+// import { PiBookBookmark } from "react-icons/pi";
 import { MdOutlineMeetingRoom } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import Item from '@mui/material/Grid'
@@ -61,7 +61,7 @@ const settings = () => {
                         </div>
                     </Link></Item>
                 </Grid>
-                <Grid item xs={4} sm={4} md={3} mb={2}>
+                {/* <Grid item xs={4} sm={4} md={3} mb={2}>
                     <Item><Link to='../settings/department'>
                         <div className="Setting_Menu">
                             <div className="title">
@@ -72,7 +72,7 @@ const settings = () => {
                             </div>
                         </div>
                     </Link></Item>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={4} sm={4} md={3} mb={2}>
                     <Item><Link to='../settings/news'>
                         <div className="Setting_Menu">
