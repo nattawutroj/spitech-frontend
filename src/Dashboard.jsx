@@ -28,7 +28,7 @@ import Major from './Components/SettingsRotue/Major';
 import Subject from './Components/SettingsRotue/Subject';
 import Room from './Components/SettingsRotue/Room';
 import News from './Components/SettingsRotue/News';
-import Semester from './Components/SettingsRotue/semester';
+import Semester from './Components/SettingsRotue/Semester';
 import Boss from './Components/SettingsRotue/Boss';
 
 const drawerWidth = 240;
