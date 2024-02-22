@@ -6,7 +6,7 @@ import { Typography } from '@mui/material';
 import axios from '../../libs/Axios';
 
 
-export default function ProjectDetail({ act,id }) {
+export default function ProjectDetail({ act, id }) {
 
     const [item, setItem] = React.useState([]);
     const [staff, setStaff] = React.useState([]);
@@ -99,8 +99,9 @@ export default function ProjectDetail({ act,id }) {
                         <Stack direction="column" spacing={0}>
                             {
                                 member?.map((data, index) => (
-                                    (data.id_project === item.id_project) ?
-                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index}>{countStd++}{data.student_code + ' ' + data.first_name_th + ' ' + data.last_name_th}</Typography>
+                                    (data.id_project === item.id_project) ? (
+                                        countStd++,
+                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index}>{data.student_code + ' ' + data.first_name_th + ' ' + data.last_name_th}</Typography>)
                                         : ''
                                 ))
                             }

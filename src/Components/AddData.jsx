@@ -46,6 +46,30 @@ const settings = () => {
                             </div>
                         </Link></Item>
                     </Grid>
+                    <Grid item xs={4} sm={4} md={3} mb={2}>
+                        <Item> <Link to='semester'>
+                            <div className="Setting_Menu">
+                                <div className="title">
+                                    เปลี่ยนภาคการศึกษา
+                                </div>
+                                <div className="logo">
+                                    <PiStudent />
+                                </div>
+                            </div>
+                        </Link></Item>
+                    </Grid>
+                    <Grid item xs={4} sm={4} md={3} mb={2}>
+                        <Item> <Link to='boss'>
+                            <div className="Setting_Menu">
+                                <div className="title">
+                                    เปลี่ยนหัวหน้าภาควิชา
+                                </div>
+                                <div className="logo">
+                                    <PiStudent />
+                                </div>
+                            </div>
+                        </Link></Item>
+                    </Grid>
                 </Grid>
             </div>
     )
