@@ -101,7 +101,8 @@ export default function ProjectDetail({ act, id }) {
                                 member?.map((data, index) => (
                                     (data.id_project === item.id_project) ? (
                                         countStd++,
-                                        <Typography sx={{ pt: 0.3, color: 'text.secondary' }} key={index}>{data.student_code + ' ' + data.first_name_th + ' ' + data.last_name_th}</Typography>)
+                                            <Typography key={index} sx={{ pt: 0.3, color: 'text.secondary' }} >{data.student_code + ' ' + data.first_name_th + ' ' + data.last_name_th}  <b>&nbsp;&nbsp;&nbsp;โทร</b> {data.phone}</Typography>
+                                    )
                                         : ''
                                 ))
                             }

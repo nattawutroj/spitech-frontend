@@ -108,7 +108,7 @@ const Home = () => {
                             <Box sx={{ height: '30vh', display: 'flex' }}>
                                 <Box sx={{ m: 'auto', width: '80%', display: 'inline' }}>
                                     <Typography variant="h3" color="initial">ระบบบริหารจัดการข้อมูลโครงงานพิเศษ</Typography>
-                                    <Typography variant="h4" color="initial">ข่าวประชาสัมพันธ์จากภาวิชา</Typography>
+                                    <Typography variant="h4" color="initial">ข่าวประชาสัมพันธ์จากภาควิชา</Typography>
                                 </Box>
                                 <Box variant="div"
                                     component="img"

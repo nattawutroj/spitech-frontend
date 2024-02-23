@@ -29,8 +29,6 @@ import Calander from "./SubComponets/Calander";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import BasicDocument from "../libs/Report/Helloworld";
-import { Link } from "react-router-dom";
 
 
 export default function AdminDash() {
@@ -1588,11 +1586,6 @@ export default function AdminDash() {
             <Modal open={modalRecord} onClose={() => { setmodalRecord(false) }}>
                 <Box sx={{ ...style, width: 400 }}>
                     <h2 id="parent-modal-title">บันทึกผลการสอบ</h2>
-                    {examrecord}
-                    {a1}
-                    {a2}
-                    {a3}
-                    {a4}
                     <RadioGroup
                         onChange={(e) => { setExamrecord(e.target.value) }}
                         row
