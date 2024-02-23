@@ -30,6 +30,7 @@ import Room from './Components/SettingsRotue/Room';
 import News from './Components/SettingsRotue/News';
 import Semester from './Components/SettingsRotue/Semester';
 import Boss from './Components/SettingsRotue/Boss';
+import ProjectAll from './Components/ProjectAll'
 
 const drawerWidth = 240;
 
@@ -120,6 +121,7 @@ export default function Dashboard() {
                         <Container maxWidth='null'>
                             <Routes>
                                 <Route path="configs" element={<Setting />} />
+                                <Route path="all" element={<ProjectAll />} />
                                 <Route path="add" element={<RouteAdd />} />
                                 <Route path="add/teacher" element={<RouteTeacher />} />
                                 <Route path="add/student" element={<RouteStudent />} />
@@ -134,7 +136,6 @@ export default function Dashboard() {
                                 <Route path="settings/subject" element={<Subject />} />
                                 <Route path="settings/room" element={<Room />} />
                                 <Route path="settings/news" element={<News />} />
-
                                 <Route path='/' element={<RouteAdminDash />} />
                                 <Route path='*' element={<h1>Not Found 404</h1>} />
                             </Routes>

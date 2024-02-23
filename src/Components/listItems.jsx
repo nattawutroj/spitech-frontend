@@ -18,7 +18,7 @@ export const mainListItems = (
             </ListItemIcon>
             <ListItemText primary="แดชบอร์ด" />
         </ListItemButton>
-        <ListItemButton href='/dashboard/record'>
+        <ListItemButton href='/dashboard/all'>
             <ListItemIcon>
                 <PausePresentation />
             </ListItemIcon>

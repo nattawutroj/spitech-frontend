@@ -40,7 +40,6 @@ const style = {
 const Userlist = ({ Open, setOpen }) => {
     const { profile } = React.useContext(ProfileContext)
     // const [modalProfile, setModalProfile] = React.useState(false);
-    console.log(profile);
     Userlist.propTypes = {
         Open: PropTypes.bool.isRequired,
         setOpen: PropTypes.func.isRequired,
@@ -85,7 +84,6 @@ const Userlist = ({ Open, setOpen }) => {
                 new_password: datalist.password
             }).then((res) => {
                 if (res.status === 200) {
-                    console.log(res.data);
                     setPasswordchangeOpen(!passwordchangeOpen);
                     alert('เปลี่ยนรหัสผ่านสำเร็จ');
                     handleLogout();
@@ -97,7 +95,6 @@ const Userlist = ({ Open, setOpen }) => {
         else {
             setErrAlert(true);
         }
-        console.log(datalist);
     }
 
     React.useEffect(() => {
@@ -139,7 +136,6 @@ const Userlist = ({ Open, setOpen }) => {
     const [editProfile, setEditProfile] = React.useState(profile);
 
 
-    console.log(editProfile);
 
     const handleInfoChangeNT = (event) => {
         setEditProfile({ ...editProfile, id_name_title: event.target.value });
@@ -387,7 +383,6 @@ const Userlist = ({ Open, setOpen }) => {
                                 }
                             ).then((res) => {
                                 if (res.status === 200) {
-                                    console.log(res);
                                     setprofilechangeOpen(!profilechangeOpen);
                                     alert('แก้ไขข้อมูลสำเร็จ');
                                     handleLogout();
