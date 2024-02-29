@@ -24,6 +24,7 @@ import { CssBaseline } from '@mui/material';
 import AddressForm from './AddressForm'
 import ChangePassword from './ChangePassword'
 
+
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -37,6 +38,9 @@ function Copyright(props) {
     );
 }
 const style = (theme) => ({
+    typography: {
+        fontFamily: 'Kanit, sans-serif',
+    },
     position: 'absolute',
     top: '50%',
     left: '50%',

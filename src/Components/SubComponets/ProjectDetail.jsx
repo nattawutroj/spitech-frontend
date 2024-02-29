@@ -66,7 +66,7 @@ export default function ProjectDetail({ act, id }) {
     return (
         <React.Fragment>
             <AccordionDetails  >
-                <Card sx={{ p: 1 }}
+                <Card sx={{ p: 1}}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -78,7 +78,7 @@ export default function ProjectDetail({ act, id }) {
                         </Stack>
                     </Stack>
                 </Card>
-                <Card sx={{ p: 1 }}
+                <Card sx={{ p: 1}}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -90,7 +90,7 @@ export default function ProjectDetail({ act, id }) {
                         </Stack>
                     </Stack>
                 </Card>
-                <Card sx={{ p: 1 }}
+                <Card sx={{ p: 1}}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -109,7 +109,7 @@ export default function ProjectDetail({ act, id }) {
                         </Stack>
                     </Stack>
                 </Card>
-                <Card sx={{ p: 1 }}
+                <Card sx={{ p: 1}}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -143,7 +143,7 @@ export default function ProjectDetail({ act, id }) {
                         </Stack>
                     </Stack>
                 </Card>
-                <Card sx={{ p: 1 }}
+                <Card sx={{ p: 1}}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -171,7 +171,7 @@ export default function ProjectDetail({ act, id }) {
                         </Stack>
                     </Stack>
                 </Card>
-                <Card sx={{ p: 1 }}
+                <Card sx={{ p: 1}}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
@@ -199,7 +199,7 @@ export default function ProjectDetail({ act, id }) {
                         </Stack>
                     </Stack>
                 </Card>
-                <Card sx={{ p: 1 }}
+                <Card sx={{ p: 1}}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >

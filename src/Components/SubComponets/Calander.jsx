@@ -49,7 +49,7 @@ const generateSlots = () => {
 };
 
 
-export default function WeekPicker({ ajid, idprojectstatustitle }) {
+export default function WeekPicker({ ajid, idprojectstatustitle, setOpenCalander }) {
     const [value, setValue] = React.useState(dayjs());
     const [idroom, setIdroom] = React.useState(-1);
     const [room, setRoom] = React.useState([]);
@@ -111,7 +111,7 @@ export default function WeekPicker({ ajid, idprojectstatustitle }) {
                     <>
                         <CardContent>
                             <Typography variant="h5" component="div">
-                                โครงงานนี้มีการจองห้องสอบแล้ว
+                                โครงงานนี้จองห้องสอบเรียบร้อยแล้ว
                             </Typography>
                             <Typography sx={{ mt: 1 }} variant="body1" component="div">
                                 เวลาที่จอง: {dayjs(reseveroom[0].date).format('DD/MM/YYYY')} {reseveroom[0].slot == 0 ? "09:00 - 10:00" : reseveroom[0].slot == 1 ? "10:00 - 11:00" : reseveroom[0].slot == 2 ? "11:00 - 12:00" : reseveroom[0].slot == 3 ? "12:00 - 13:00" : reseveroom[0].slot == 4 ? "13:00 - 14:00" : reseveroom[0].slot == 5 ? "14:00 - 15:00" : reseveroom[0].slot == 6 ? "15:00 - 16:00" : reseveroom[0].slot == 7 ? "16:00 - 17:00" : reseveroom[0].slot == 8 ? "17:00 - 18:00" : reseveroom[0].slot == 9 ? "18:00 - 19:00" : ''}
@@ -121,32 +121,44 @@ export default function WeekPicker({ ajid, idprojectstatustitle }) {
                                 {console.log(room)}
                                 ห้องที่จอง: {reseveroom[0].room_title}
                             </Typography>
-
-                            <Button
-                                sx={{ mt: 3, mb: 1}}
-                                fullWidth
-                                onClick={() => {
-                                    console.log(reseveroom[0].id_schedule);
-                                    confirm('คุณต้องการยกเลิกการจองหรือไม่') == true ?
-                                    axios.delete('/resources/admin/room/schedule', {
-                                        params: {
-                                            id_schedule: reseveroom[0].id_schedule
-                                        }
-                                    })
-                                        .then(res => {
-                                            console.log(res);
-                                            SChecker();
-                                        })
-                                        .catch(err => {
-                                            console.log(err);
-                                        })
-                                    : null;
-                                }}
-                                variant="contained"
-                                color="error"
-                            >
-                                ยกเลิกการจอง
-                            </Button>
+                            <Stack spacing={2} direction="row" sx={{mt:5}}>
+                                <Button
+                                    sx={{ mt: 3, mb: 1 }}
+                                    fullWidth
+                                    onClick={() => {
+                                        setOpenCalander(false)
+                                    }}
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    ยืนยัน
+                                </Button>
+                                <Button
+                                    sx={{ mt: 3, mb: 1 }}
+                                    fullWidth
+                                    onClick={() => {
+                                        console.log(reseveroom[0].id_schedule);
+                                        confirm('คุณต้องการยกเลิกการจองหรือไม่') == true ?
+                                            axios.delete('/resources/admin/room/schedule', {
+                                                params: {
+                                                    id_schedule: reseveroom[0].id_schedule
+                                                }
+                                            })
+                                                .then(res => {
+                                                    console.log(res);
+                                                    SChecker();
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
+                                                })
+                                            : null;
+                                    }}
+                                    variant="contained"
+                                    color="error"
+                                >
+                                    ยกเลิกการจอง
+                                </Button>
+                            </Stack>
                         </CardContent>
                     </>
                     : <>

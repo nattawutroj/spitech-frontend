@@ -12,6 +12,7 @@ import { NativeSelect } from "@mui/material";
 import { Stack } from "@mui/material";
 import { Button } from "@mui/material";
 import AllProjectList from "../libs/Report/AllProjectList"
+import Box from "@mui/material/Box";
 
 
 export default function AdminDash() {
@@ -35,7 +36,6 @@ export default function AdminDash() {
 
     const fetchsemester = async () => {
         const [semester] = await Promise.all([getsemester()]);
-        console.log(semester)
         setSemester(semester.data.result);
     }
 
@@ -51,6 +51,7 @@ export default function AdminDash() {
     const [semester_select, setSemester_Select] = React.useState(-1);
 
     const [pdfUrl, setPdfUrl] = React.useState('');
+    const [resetCounter, setResetCounter] = React.useState(0);
 
 
     const handleFileDownload = (id_file) => {
@@ -86,7 +87,6 @@ export default function AdminDash() {
         axios.get('resources/admin/reqproject', {}
         ).then(res => {
             setPdfUrl(null)
-            console.log(res)
             setFileList(res.data.result);
             setExpanded(false);
         }).catch(err => {
@@ -257,9 +257,6 @@ export default function AdminDash() {
 
     return (
         <>
-            {
-                console.log(semester)
-            }
             <Grid container spacing={2}>
                 <Grid sx={{ height: '100vh', overflowY: 'scroll' }} item xs={12} md={12} lg={6}>
                     <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
@@ -307,7 +304,7 @@ export default function AdminDash() {
                                 <option value={9}>กำลังเริ่มต้นโครงงาน</option>
                             </NativeSelect>
                         </FormControl>
-                        <Button onClick={() => { fillterdata() }} variant="contained" sx={{ mt: 2 }} >พิมพ์รายงาน</Button>
+                        <Button onClick={() => { fillterdata(),setResetCounter(resetCounter + 1); }} variant="contained" sx={{ mt: 2 }} >พิมพ์รายงาน</Button>
                     </Stack>
                     {
                         docgenlist.length == 0 ? <Typography sx={{ mt: 2 }}>ไม่พบข้อมูล</Typography> :
@@ -446,7 +443,12 @@ export default function AdminDash() {
                 {
                     window.innerWidth > 600 ?
                         <Grid item xs={12} md={12} lg={6}>
-                                <AllProjectList />
+                            <Box
+                                height={'100vh'}
+                                width={'100%'}
+                                display="flex"
+                            >
+                            <AllProjectList docgenlist={docgenlist} key={resetCounter}   /></Box>
                         </Grid>
                         :
                         null
