@@ -24,6 +24,7 @@ import { CssBaseline } from '@mui/material';
 import AddressForm from './AddressForm'
 import ChangePassword from './ChangePassword'
 
+
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -37,6 +38,9 @@ function Copyright(props) {
     );
 }
 const style = (theme) => ({
+    typography: {
+        fontFamily: 'Kanit, sans-serif',
+    },
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -260,6 +264,9 @@ export default function SignInSide() {
                     if (res.data.data.id_role == 1) {
                         localStorage.setItem('role', 'admin');
                         window.location.href = '/dashboard';
+                    }else if (res.data.data.id_role == 3) {
+                        localStorage.setItem('role', 'staff');
+                        window.location.href = '/staffdash';
                     }
                     else if (res.data.data.id_role == undefined) {
                         localStorage.setItem('role', 'student');

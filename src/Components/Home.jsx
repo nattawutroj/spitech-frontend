@@ -22,7 +22,29 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { PausePresentation } from '@mui/icons-material';
 
 
-const theme = createTheme();
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Kanit, sans-serif',
+    },
+    components: {
+        MuiTypography: {
+            defaultProps: {
+                variantMapping: {
+                    h1: 'h2',
+                    h2: 'h2',
+                    h3: 'h2',
+                    h4: 'h2',
+                    h5: 'h2',
+                    h6: 'h2',
+                    subtitle1: 'h2',
+                    subtitle2: 'h2',
+                    body1: 'span',
+                    body2: 'span',
+                },
+            },
+        },
+    },
+})
 
 theme.typography.h3 = {
     fontSize: '1.2rem',
@@ -127,7 +149,7 @@ const Home = () => {
                                 sx={{ mb: 3 }}
                             >
                                 <DemoPaper square={false}>
-                                    <ListItemButton href='/dashboard'>
+                                    <ListItemButton href='/schedule'>
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -10,8 +11,8 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from './Components/listItems';
-import UserList from './Components/UList';
+import { mainListItems } from './Components/listItemstd';
+import UserList from './Components/UListStaff';
 import { Route, Routes } from 'react-router-dom';
 import Setting from './Components/Settings';
 import RouteAdd from './Components/AddData';
@@ -19,20 +20,9 @@ import Axios from './libs/Axios';
 import RouteStdGrops from './Components/StdGrops';
 import RouteStudent from './Components/TableStuden'
 import RouteTeacher from './Components/TableTeaher'
-import RouteAdminDash from './Components/AdminDash'
-import Record from './Components/Record';
-import Course from './Components/SettingsRotue/Course';
-import Department from './Components/SettingsRotue/Department';
-import NameTitle from './Components/SettingsRotue/NameTitle';
-import Major from './Components/SettingsRotue/Major';
-import Subject from './Components/SettingsRotue/Subject';
-import Room from './Components/SettingsRotue/Room';
-import News from './Components/SettingsRotue/News';
-import Semester from './Components/SettingsRotue/Semester';
-import Boss from './Components/SettingsRotue/Boss';
-import ProjectAll from './Components/ProjectAll'
-import ReportData from './Components/ReportData';
-import ReportProTea from './Components/ReportProTea';
+import ReportProTeaStaff from './Components/ReportProTeaStaff';
+
+
 
 
 const drawerWidth = 240;
@@ -67,7 +57,8 @@ const defaultTheme = createTheme();
 export const ProfileContext = React.createContext();
 export default function Dashboard() {
     const role = localStorage.getItem('role');
-    if (role !== 'admin') {
+    if(role !== 'staff')
+    {
         localStorage.removeItem('token')
     }
 
@@ -75,6 +66,7 @@ export default function Dashboard() {
     React.useEffect(() => {
         Axios.get('/user/profile').then(res => {
             setProfile(res.data.result);
+            console.log(res.data.result);
         }).catch(err => {
             console.log(err);
         })
@@ -123,26 +115,7 @@ export default function Dashboard() {
                     >
                         <Container maxWidth='null'>
                             <Routes>
-                                <Route path="configs" element={<Setting />} />
-                                <Route path="all" element={<ProjectAll />} />
-                                <Route path="add" element={<RouteAdd />} />
-                                <Route path="add/teacher" element={<RouteTeacher />} />
-                                <Route path="add/student" element={<RouteStudent />} />
-                                <Route path="add/studentgrops" element={<RouteStdGrops />} />
-                                <Route path="add/semester" element={<Semester />} />
-                                <Route path="add/boss" element={<Boss />} />
-                                <Route path="record" element={<Record />} />
-                                <Route path="settings/course" element={<Course />} />
-                                <Route path="settings/department" element={<Department />} />
-                                <Route path="settings/name_titile" element={<NameTitle />} />
-                                <Route path="settings/major" element={<Major />} />
-                                <Route path="settings/subject" element={<Subject />} />
-                                <Route path="settings/room" element={<Room />} />
-                                <Route path="settings/news" element={<News />} />
-                                <Route path="/reportdata" element={<ReportData />} />
-                                <Route path="/reportdata/teacher" element={<ReportProTea />} />
-                                <Route path='/' element={<RouteAdminDash />} />
-                                <Route path='*' element={<h1>Not Found 404</h1>} />
+                                <Route path='*' element={<ReportProTeaStaff />} />
                             </Routes>
                         </Container>
                     </Box>

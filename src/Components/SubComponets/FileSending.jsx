@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import axios from '../../libs/Axios';
 import { AccordionDetails } from '@mui/material';
 import { Accordion, AccordionSummary, Card, Stack, Typography } from '@mui/material';
@@ -68,7 +69,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
 
 
     const handleFileUpload = () => {
-        if ((itemprojectinfo.id_project_status_title == 7 ) && testcat == 1) {
+        if ((itemprojectinfo.id_project_status_title == 7) && testcat == 1) {
             alert('โปรดระบุประเภทการยื่นสอบ')
         }
         else {
@@ -142,90 +143,6 @@ export default function FileSending({ itemprojectinfo, id_project }) {
             {fileList != null
                 ?
                 <>
-                    {fileList.map((file, index) => (
-                        file.staus_code == 21 || file.staus_code == 25 ?
-                            <Accordion key={index} sx={{ mt: 1, width: '100%' }} >
-                                <AccordionSummary
-                                    expandIcon={<CloudUploadIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    {console.log(file)}
-                                    <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
-                                    {
-                                        file.staus_code == 21 ?
-                                            <Typography sx={{ pt: 0.3, color: orange[600] }}>{file.project_status_name_title}</Typography>
-                                            :
-                                            file.staus_code == 19 || file.staus_code == 18 ?
-                                                <Typography sx={{ pt: 0.3, color: red[600] }}>{file.project_status_name_title}</Typography>
-                                                :
-                                                file.staus_code == 25 ?
-                                                    <Typography sx={{ pt: 0.3, color: green[600] }}>{file.project_status_name_title}</Typography>
-                                                    :
-                                                    null
-                                    }
-                                </AccordionSummary>
-
-                                <Stack
-                                    direction="row"
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    spacing={2}
-                                    sx={{ ml: 4, mr: 4 }}
-                                >
-                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
-                                    {/* remove button */}
-                                    {
-                                        file.staus_code == 21 ?
-                                            <Button onClick={() => { handleFileDelete(file.id_project_file_path) }} color='error' variant="outlined" sx={{ pl: 3, color: red[600] }} startIcon={<DeleteForeverOutlined />}></Button>
-                                            :
-                                            null
-                                    }
-                                </Stack>
-                                <AccordionDetails>
-                                    <Card sx={{ p: 1 }}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Stack direction="row" spacing={0}>
-                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>เวลา</Typography>
-                                            <Stack direction="column" spacing={0}>
-                                                <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{convertDate(file.timestamp)}</Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Card>
-                                    <Card sx={{ p: 1 }}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Stack direction="row" spacing={0}>
-                                            <Typography sx={{ mt: 2, width: '33%', flexShrink: 0 }}>ไฟล์</Typography>
-                                            <Stack direction="column" spacing={0}>
-                                                <Typography sx={{ pt: 1, mb: 1, color: 'text.secondary' }}><Button onClick={() => handleFileDownload(file.path)} component="label" variant="contained" startIcon={<ZoomIn />}>View File</Button></Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Card>
-                                    {
-
-                                        file.comment != null ?
-                                            <Card sx={{ p: 1 }}
-                                                aria-controls="panel1a-content"
-                                                id="panel1a-header"
-                                            >
-                                                <Stack direction="row" spacing={0}>
-                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>หมายเหตุ</Typography>
-                                                    <Stack direction="column" spacing={0}>
-                                                        <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{file.comment}</Typography>
-                                                    </Stack>
-                                                </Stack>
-                                            </Card> : ''
-                                    }
-                                </AccordionDetails>
-                            </Accordion>
-                            :
-                            null
-                    ))}
-
                     {
                         (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) ?
                             <Typography variant="h6" gutterBottom component="div">
@@ -238,7 +155,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                     <Typography variant="body2" color="text.secondary">
                                         {file ? file.name : 'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'}
                                     </Typography>
-                                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                    <Button component="label" variant="contained" startIcon={<UploadFileIcon />}>
                                         Upload File
                                         <VisuallyHiddenInput
                                             type="file"
@@ -280,149 +197,155 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                             </Typography>
                             : ''
                     }
-                    <Accordion sx={{ mt: 1, width: '100%' }} >
+                    <Accordion sx={{ mt: 1, width: '100%' }} expanded >
                         <AccordionSummary
-                            expandIcon={<CloudUploadIcon />}
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>คำร้องถูกยกเลิก</Typography>
-
+                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>สถานะการยื่นสอบ</Typography>
                         </AccordionSummary>
-                        {fileList.map((file, index) => (
-                            file.staus_code == 19 || file.staus_code == 18 ?
-                                <Accordion key={index} sx={{ mt: 1, width: '100%' }} >
-                                    <AccordionSummary
-                                        expandIcon={<CloudUploadIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>รหัสคำร้อง {file.id_project_file_path}</Typography>
-                                        {
-                                            file.staus_code == 21 ?
-                                                <Typography sx={{ pt: 0.3, color: orange[600] }}>{file.project_status_name_title}</Typography>
-                                                :
-                                                file.staus_code == 19 || file.staus_code == 18 ?
-                                                    <Typography sx={{ pt: 0.3, color: red[600] }}>{file.project_status_name_title}</Typography>
+                        <AccordionDetails>
+                            {fileList.map((file, index) => (
+                                file.staus_code == 21 || file.staus_code == 25 || file.staus_code == 24 || file.staus_code == 19 || file.staus_code == 18 ?
+                                    <Accordion key={index} sx={{ mt: 1, width: '100%' }} >
+                                        <AccordionSummary
+                                            expandIcon={<KeyboardArrowUpIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            {console.log(file)}
+                                            <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>{convertDate(file.timestamp)}</Typography>
+                                            {
+                                                file.staus_code == 21 ?
+                                                    <Typography sx={{ pt: 0.3, color: orange[600] }}>{file.project_status_name_title}</Typography>
+                                                    :
+                                                    file.staus_code == 19 || file.staus_code == 18 || file.staus_code == 24 ?
+                                                        <Typography sx={{ pt: 0.3, color: red[600] }}>{file.project_status_name_title}</Typography>
+                                                        :
+                                                        file.staus_code == 25 ?
+                                                            <Typography sx={{ pt: 0.3, color: green[600] }}>{file.project_status_name_title}</Typography>
+                                                            :
+                                                            null
+                                            }
+                                        </AccordionSummary>
+
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            spacing={2}
+                                            sx={{ ml: 4, mr: 4 }}
+                                        >
+                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
+                                            {/* remove button */}
+                                            {
+                                                file.staus_code == 21 ?
+                                                    <Button onClick={() => { handleFileDelete(file.id_project_file_path) }} color='error' variant="outlined" sx={{ pl: 3, color: red[600] }} startIcon={<DeleteForeverOutlined />}></Button>
                                                     :
                                                     null
-                                        }
-                                    </AccordionSummary>
-
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        spacing={2}
-                                        sx={{ ml: 4, mr: 4 }}
-                                    >
-                                        <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>รายละเอียด</Typography>
-                                        {/* remove button */}
-                                        {
-                                            file.staus_code == 21 ?
-                                                <Button onClick={() => { handleFileDelete(file.id_project_file_path) }} color='error' variant="outlined" sx={{ pl: 3, color: red[600] }} startIcon={<DeleteForeverOutlined />}></Button>
-                                                :
-                                                null
-                                        }
-                                    </Stack>
-                                    <AccordionDetails>
-                                        <Card sx={{ p: 1 }}
-                                            aria-controls="panel1a-content"
-                                            id="panel1a-header"
-                                        >
-                                            <Stack direction="row" spacing={0}>
-                                                <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>เวลา</Typography>
-                                                <Stack direction="column" spacing={0}>
-                                                    <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{convertDate(file.timestamp)}</Typography>
-                                                </Stack>
-                                            </Stack>
-                                        </Card>
-                                        <Card sx={{ p: 1 }}
-                                            aria-controls="panel1a-content"
-                                            id="panel1a-header"
-                                        >
-                                            <Stack direction="row" spacing={0}>
-                                                <Typography sx={{ mt: 2, width: '33%', flexShrink: 0 }}>ไฟล์</Typography>
-                                                <Stack direction="column" spacing={0}>
-                                                    <Typography sx={{ pt: 1, mb: 1, color: 'text.secondary' }}><Button onClick={() => handleFileDownload(file.path)} component="label" variant="contained" startIcon={<ZoomIn />}>View File</Button></Typography>
-                                                </Stack>
-                                            </Stack>
-                                        </Card>
-                                        {
-
-                                            file.comment != null ?
-                                                <Card sx={{ p: 1 }}
-                                                    aria-controls="panel1a-content"
-                                                    id="panel1a-header"
-                                                >
-                                                    <Stack direction="row" spacing={0}>
-                                                        <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>หมายเหตุ</Typography>
-                                                        <Stack direction="column" spacing={0}>
-                                                            <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{file.comment}</Typography>
-                                                        </Stack>
+                                            }
+                                        </Stack>
+                                        <AccordionDetails>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>เวลา</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{convertDate(file.timestamp)}</Typography>
                                                     </Stack>
-                                                </Card> : ''
-                                        }
-                                    </AccordionDetails>
-                                </Accordion>
-                                :
-                                null
-                        ))}
+                                                </Stack>
+                                            </Card>
+                                            <Card sx={{ p: 1 }}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Stack direction="row" spacing={0}>
+                                                    <Typography sx={{ mt: 2, width: '33%', flexShrink: 0 }}>ไฟล์</Typography>
+                                                    <Stack direction="column" spacing={0}>
+                                                        <Typography sx={{ pt: 1, mb: 1, color: 'text.secondary' }}><Button onClick={() => handleFileDownload(file.path)} component="label" variant="contained" startIcon={<ZoomIn />}>View File</Button></Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                            {
+
+                                                file.comment != null ?
+                                                    <Card sx={{ p: 1 }}
+                                                        aria-controls="panel1a-content"
+                                                        id="panel1a-header"
+                                                    >
+                                                        <Stack direction="row" spacing={0}>
+                                                            <Typography sx={{ mt: 0.1, width: '33%', flexShrink: 0 }}>หมายเหตุ</Typography>
+                                                            <Stack direction="column" spacing={0}>
+                                                                <Typography sx={{ mt: 0.3, color: 'text.secondary' }}>{file.comment}</Typography>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </Card> : ''
+                                            }
+                                        </AccordionDetails>
+                                    </Accordion>
+                                    :
+                                    null
+                            ))}
+
+
+                        </AccordionDetails>
                     </Accordion>
                 </>
                 :
                 (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) ?
-                            <Typography variant="h6" gutterBottom component="div">
-                                <Stack sx={{ mt: 2 }} spacing={2} direction="row"
-                                    justifyContent="space-around"
-                                    alignItems="center"
+                    <Typography variant="h6" gutterBottom component="div">
+                        <Stack sx={{ mt: 2 }} spacing={2} direction="row"
+                            justifyContent="space-around"
+                            alignItems="center"
 
-                                >
+                        >
 
-                                    <Typography variant="body2" color="text.secondary">
-                                        {file ? file.name : 'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'}
-                                    </Typography>
-                                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                        Upload File
-                                        <VisuallyHiddenInput
-                                            type="file"
-                                            onChange={handleFileChange}
-                                            accept=".pdf" // Allow only PDF files
-                                        />
-                                    </Button>
-
-                                    {
-                                        (itemprojectinfo.id_project_status_title == 7) ?
-                                            <Box sx={{ minWidth: 200 }}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel id="demo-simple-select-label">ประเภทยื่นสอบ</InputLabel>
-                                                    <Select
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        value={testcat}
-                                                        label="ประเภทยื่นสอบ"
-                                                        onChange={handleChangetestcat}
-                                                    >
-                                                        <MenuItem value={1}>โปรดระบุ</MenuItem>
-                                                        <MenuItem value={2}>ยื่นสอบหกสิบ</MenuItem>
-                                                        <MenuItem value={3}>ยื่นสอบร้อย</MenuItem>
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                            :
-                                            null
-                                    }
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleFileUpload}
-                                        disabled={!file} // Disable the button if no file selected
-                                    >
-                                        ยื่นสอบ
-                                    </Button>
-                                </Stack>
+                            <Typography variant="body2" color="text.secondary">
+                                {file ? file.name : 'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'}
                             </Typography>
-                            : ''
+                            <Button component="label" variant="contained" startIcon={<UploadFileIcon />}>
+                                Upload File
+                                <VisuallyHiddenInput
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    accept=".pdf" // Allow only PDF files
+                                />
+                            </Button>
+
+                            {
+                                (itemprojectinfo.id_project_status_title == 7) ?
+                                    <Box sx={{ minWidth: 200 }}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">ประเภทยื่นสอบ</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={testcat}
+                                                label="ประเภทยื่นสอบ"
+                                                onChange={handleChangetestcat}
+                                            >
+                                                <MenuItem value={1}>โปรดระบุ</MenuItem>
+                                                <MenuItem value={2}>ยื่นสอบหกสิบ</MenuItem>
+                                                <MenuItem value={3}>ยื่นสอบร้อย</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                    :
+                                    null
+                            }
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleFileUpload}
+                                disabled={!file} // Disable the button if no file selected
+                            >
+                                ยื่นสอบ
+                            </Button>
+                        </Stack>
+                    </Typography>
+                    : ''
             }
 
         </>

@@ -13,6 +13,10 @@ import { Stack } from "@mui/material";
 import { Button } from "@mui/material";
 import AllProjectList from "../libs/Report/AllProjectList"
 import Box from "@mui/material/Box";
+import Select from '@mui/material/Select';
+
+import MenuItem from '@mui/material/MenuItem';
+
 
 
 export default function AdminDash() {
@@ -40,8 +44,10 @@ export default function AdminDash() {
     }
 
     React.useEffect(() => {
+        FetchStaff(); // Assuming FetchStaff modifies some state
         fetchsemester();
     }, [])
+    
 
 
     const [fileList, setFileList] = React.useState([]);
@@ -83,15 +89,34 @@ export default function AdminDash() {
     };
 
 
-    const Fetchreqreport = () => {
-        axios.get('resources/admin/reqproject', {}
-        ).then(res => {
-            setPdfUrl(null)
-            setFileList(res.data.result);
-            setExpanded(false);
-        }).catch(err => {
-            console.log(err);
-        })
+    const [staffList, setStaffList] = React.useState([]);
+
+    const [id_staff, setIdStaff] = React.useState(-1);
+    function FetchStaff() {
+        axios.get('/user/stafflist')
+            .then(res => {
+                console.log(res.data);
+                setStaffList(res.data.result);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+
+    const Fetchreqreport = async () => {
+            await axios.get('resources/admin/reqproject/teacher', {
+                params: {
+                    id_staff: id_staff
+                }
+            }
+            ).then(res => {
+                setPdfUrl(null)
+                setFileList(res.data.result);
+                setExpanded(false);
+            }).catch(err => {
+                console.log(err);
+            })
     }
 
     const Viewpdf = (id) => {
@@ -102,10 +127,6 @@ export default function AdminDash() {
     const handleChange = (panel) => {
         setExpanded(panel);
     }
-
-    React.useEffect(() => {
-        Fetchreqreport();
-    }, [selectstatus_code])
 
     function fillterdata() {
         setDocgenlist([]);
@@ -260,6 +281,29 @@ export default function AdminDash() {
             <Grid container spacing={2}>
                 <Grid sx={{ height: '100vh', overflowY: 'scroll' }} item xs={12} md={12} lg={6}>
                     <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">อาจารย์</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={id_staff}
+                                label="หัวหน้าภาควิชา"
+                                onChange={(e) => { setIdStaff(e.target.value) }}
+                            >
+                                <MenuItem value={-1}><em>เลือกที่อาจารย์</em></MenuItem>
+                                {
+                                    staffList.map((staff, index) => {
+                                        return (
+                                            <MenuItem key={index} value={staff.id_staff}>{staff.name_title_th + ' ' + staff.first_name_th + ' ' + staff.last_name_th}</MenuItem>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                        <Button onClick={() => {Fetchreqreport()}} disabled={id_staff === -1 ? true : false} variant="contained" sx={{ mt: 2 }}>
+                            ดึงข้อมูล
+                        </Button>
+
                         <FormControl sx={{ m: 1, mt: 2, minWidth: 120 }} size="small">
                             <InputLabel variant="standard" htmlFor="uncontrolled-native">
                                 ภาคการศึกษา

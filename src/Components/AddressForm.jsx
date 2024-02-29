@@ -35,7 +35,7 @@ export default function AddressForm({ profile, setProfile, editProfileAlert }) {
       .then(res => {
         setMajorCode(prevMajorCode => {
           const newMajorCode = res.data.data.map(item => ({
-            label: item.major_code + ' ' + item.major_name,
+            label: item.major_initial + ' ' + item.major_name,
             value: item.major_code
           }));
           return [...prevMajorCode, ...newMajorCode];

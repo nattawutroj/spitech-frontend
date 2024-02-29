@@ -7,7 +7,33 @@ import Accord from "./Accord";
 import ProjectCard from "./ProjectCard";
 import ProjectStudentHome from "./ProjectStudentHome";
 import { Select, MenuItem, InputLabel } from "@mui/material";
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/system';
 
+
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Kanit, sans-serif',
+    },
+    components: {
+        MuiTypography: {
+            defaultProps: {
+                variantMapping: {
+                    h1: 'h2',
+                    h2: 'h2',
+                    h3: 'h2',
+                    h4: 'h2',
+                    h5: 'h2',
+                    h6: 'h2',
+                    subtitle1: 'h2',
+                    subtitle2: 'h2',
+                    body1: 'span',
+                    body2: 'span',
+                },
+            },
+        },
+    },
+})
 
 export default function ProjectDash() {
     const profile = React.useContext(ProfileContext);
@@ -166,171 +192,173 @@ export default function ProjectDash() {
     }, [])
 
     return (
-        <React.Fragment>
-            <CssBaseline />
-            {
-                console.log(projectinfo)
-            }{
-                addProjectBtn
-                    ?
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<Add />}
-                        sx={{ mt: 2 }}
-                        onClick={handleOpen}
-                        disabled={!addProjectBtn}
-                        hidden={!addProjectBtn}
-                    >
-                        Add Project
-                    </Button>
-                    :
-                    projectinfo[0].id_project_status_title == 0
+        <ThemeProvider theme={theme}>
+            <React.Fragment>
+                <CssBaseline />
+                {
+                    console.log(projectinfo)
+                }{
+                    addProjectBtn
                         ?
-                        < ProjectCard projectinfo={projectinfo} />
-                        :
-                        <ProjectStudentHome projectinfo={projectinfo} />
-            }
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...styleModal, width: 400 }}>
-                    <h2 id="parent-modal-title"></h2>
-                    <Stack direction="row" spacing={2}>
-                        <Button sx={{ width: '50%', height: '100px' }} mr="3" variant="contained" onClick={handleOpenBuild}>
-                            สร้างโปรเจค
-                        </Button>
-                        <Button sx={{ width: '50%', height: '100px' }} variant="contained" onClick={handleOpenJoin}>
-                            เข้าร่วมโปรเจค
-                        </Button>
-                    </Stack>
-                </Box>
-            </Modal>
-            <Modal
-                open={openBuild}
-                onClose={handleCloseBuild}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...styleModal, width: 400 }}>
-                    <h2 id="parent-modal-title">Build Your Project</h2>
-                    <Box component="form" noValidate onSubmit={submitBuild} sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="project_title_th"
-                            label="ชื่อโปรเจ็คภาษาไทย"
-                            name="project_title_th"
-                            autoFocus
-                            error={errAlert}
-                            helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="project_title_en"
-                            label="ชื่อโปรเจ็คภาษาอังกฤษ"
-                            name="project_title_en"
-                            autoFocus
-                            error={errAlert}
-                            helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
-                        />
-                        <TextField
-                            margin="normal"
-                            fullWidth
-                            id="project_study_title_th"
-                            label="แหล่งกรณีศึกษาภาษาไทย"
-                            name="project_study_title_th"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            fullWidth
-                            id="project_study_title_en"
-                            label="แหล่งกรณีศึกษาภาษาอังกฤษ"
-                            name="project_study_title_en"
-                            autoFocus
-                        />
-                        <InputLabel id="select-subject">เลือกรายวิชาโครงงานพิเศษ</InputLabel>
-                        <Select
-                            fullWidth
-                            labelId="select-subject"
-                            id="demo-simple-select"
-                            value={subject}
-                            error={errAlert}
-                            label="เลือกรายวิชาโครงงานพิเศษ"
-                            onChange={handleChangesubject}
-                        >
-                            {
-                                console.log(subjectList)
-                            }
-                            <MenuItem value={-1}></MenuItem>
-                            {subjectList ? subjectList.map((item, index) => {
-                                return (
-                                    <MenuItem key={index} value={item.subject_code}>{item.subject_code + "  " +item.subject_name}</MenuItem>
-                                )
-                            }) : ''}
-                        </Select>
                         <Button
-                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            startIcon={<Add />}
+                            sx={{ mt: 2 }}
+                            onClick={handleOpen}
+                            disabled={!addProjectBtn}
+                            hidden={!addProjectBtn}
+                        >
+                            Add Project
+                        </Button>
+                        :
+                        projectinfo[0].id_project_status_title == 0
+                            ?
+                            < ProjectCard projectinfo={projectinfo} />
+                            :
+                            <ProjectStudentHome projectinfo={projectinfo} />
+                }
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description"
+                >
+                    <Box sx={{ ...styleModal, width: 400 }}>
+                        <h2 id="parent-modal-title"></h2>
+                        <Stack direction="row" spacing={2}>
+                            <Button sx={{ width: '50%', height: '100px' }} mr="3" variant="contained" onClick={handleOpenBuild}>
+                                สร้างโปรเจค
+                            </Button>
+                            <Button sx={{ width: '50%', height: '100px' }} variant="contained" onClick={handleOpenJoin}>
+                                เข้าร่วมโปรเจค
+                            </Button>
+                        </Stack>
+                    </Box>
+                </Modal>
+                <Modal
+                    open={openBuild}
+                    onClose={handleCloseBuild}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description"
+                >
+                    <Box sx={{ ...styleModal, width: 400 }}>
+                        <h2 id="parent-modal-title">Build Your Project</h2>
+                        <Box component="form" noValidate onSubmit={submitBuild} sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="project_title_th"
+                                label="ชื่อโปรเจ็คภาษาไทย"
+                                name="project_title_th"
+                                autoFocus
+                                error={errAlert}
+                                helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="project_title_en"
+                                label="ชื่อโปรเจ็คภาษาอังกฤษ"
+                                name="project_title_en"
+                                autoFocus
+                                error={errAlert}
+                                helperText={errAlert ? 'กรุณากรอกข้อมูล' : ''}
+                            />
+                            <TextField
+                                margin="normal"
+                                fullWidth
+                                id="project_study_title_th"
+                                label="แหล่งกรณีศึกษาภาษาไทย"
+                                name="project_study_title_th"
+                                autoFocus
+                            />
+                            <TextField
+                                margin="normal"
+                                fullWidth
+                                id="project_study_title_en"
+                                label="แหล่งกรณีศึกษาภาษาอังกฤษ"
+                                name="project_study_title_en"
+                                autoFocus
+                            />
+                            <InputLabel id="select-subject">เลือกรายวิชาโครงงานพิเศษ</InputLabel>
+                            <Select
+                                fullWidth
+                                labelId="select-subject"
+                                id="demo-simple-select"
+                                value={subject}
+                                error={errAlert}
+                                label="เลือกรายวิชาโครงงานพิเศษ"
+                                onChange={handleChangesubject}
+                            >
+                                {
+                                    console.log(subjectList)
+                                }
+                                <MenuItem value={-1}></MenuItem>
+                                {subjectList ? subjectList.map((item, index) => {
+                                    return (
+                                        <MenuItem key={index} value={item.subject_code}>{item.subject_code + "  " + item.subject_name}</MenuItem>
+                                    )
+                                }) : ''}
+                            </Select>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Create
+                            </Button>
+                        </Box>
+                    </Box>
+                </Modal>
+                <Modal
+                    open={openJoin}
+                    onClose={handleCloseJoin}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description"
+                >
+                    <Box sx={{ ...styleModal, width: 400 }}>
+                        <h2 id="parent-modal-title">Join Project </h2>
+                        <Stack direction="row" spacing={1}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="id_project"
+                                label="รหัสโปรเจ็ค"
+                                name="id_project"
+                                onChange={handleSearchJoinField}
+                                value={searchJoinField}
+                                autoFocus
+                                error={errAlert}
+                                helperText={errAlert ? 'ไม่พบข้อมูล' : ''}
+                            />
+                            <Button
+                                onClick={searchJoin}
+                                size="small"
+                                width="100%"
+                                variant="contained"
+                            >
+                                Search
+                            </Button>
+                        </Stack>
+                        {accDetail ? <Accord joinDetail={joinDetail} /> : ''}
+                        <Button
+                            onClick={submitJoin}
                             fullWidth
                             variant="contained"
+                            disabled={submitJoinDisabled}
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Create
+                            {submitJoinDisabled ? 'Join' : setAccDetail ? 'Join' : 'Joined'}
                         </Button>
                     </Box>
-                </Box>
-            </Modal>
-            <Modal
-                open={openJoin}
-                onClose={handleCloseJoin}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...styleModal, width: 400 }}>
-                    <h2 id="parent-modal-title">Join Project </h2>
-                    <Stack direction="row" spacing={1}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="id_project"
-                            label="รหัสโปรเจ็ค"
-                            name="id_project"
-                            onChange={handleSearchJoinField}
-                            value={searchJoinField}
-                            autoFocus
-                            error={errAlert}
-                            helperText={errAlert ? 'ไม่พบข้อมูล' : ''}
-                        />
-                        <Button
-                            onClick={searchJoin}
-                            size="small"
-                            width="100%"
-                            variant="contained"
-                        >
-                            Search
-                        </Button>
-                    </Stack>
-                    {accDetail ? <Accord joinDetail={joinDetail} /> : ''}
-                    <Button
-                        onClick={submitJoin}
-                        fullWidth
-                        variant="contained"
-                        disabled={submitJoinDisabled}
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        {submitJoinDisabled ? 'Join' : setAccDetail ? 'Join' : 'Joined'}
-                    </Button>
-                </Box>
-            </Modal>
-        </React.Fragment>
+                </Modal>
+            </React.Fragment>
+        </ThemeProvider>
     )
 }
 
