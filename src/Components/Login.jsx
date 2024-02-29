@@ -264,6 +264,9 @@ export default function SignInSide() {
                     if (res.data.data.id_role == 1) {
                         localStorage.setItem('role', 'admin');
                         window.location.href = '/dashboard';
+                    }else if (res.data.data.id_role == 3) {
+                        localStorage.setItem('role', 'staff');
+                        window.location.href = '/staffdash';
                     }
                     else if (res.data.data.id_role == undefined) {
                         localStorage.setItem('role', 'student');

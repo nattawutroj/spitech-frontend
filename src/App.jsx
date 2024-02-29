@@ -5,6 +5,8 @@ import Home from './Components/Home';
 import Dashboard from './Dashboard';
 import RouteStudenDash from './StudentDash';
 import Report from './Components/SubComponets/Report';
+import Schedule from './libs/Report/Schedule'; 
+import StaffDash from './StaffDash'
 
 const theme = createTheme({
   typography: {
@@ -37,8 +39,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
+          <Route path="/staffdash/*" element={<StaffDash />} />
           <Route path="/studentdash/*" element={<RouteStudenDash />} />
           <Route path="/testreport/:id/:selectReport" element={<Report />} />
+          <Route path="/schedule" element={<Schedule />} />
           <Route path="/*" element={<h1>Not Found 404</h1>} />
         </Routes>
       </BrowserRouter>

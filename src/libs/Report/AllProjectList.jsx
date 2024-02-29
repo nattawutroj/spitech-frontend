@@ -203,7 +203,7 @@ function Header() {
                 <View style={{ width: '5%' }}>
                 </View>
                 <View style={{ width: '70%', marginTop: 15 }}>
-                    <Text style={styles.title}>รายงานสถานะโครงงานพิเศษ</Text>
+                    <Text style={styles.title}>รายงานสถานะโครงงานพิเศษ (ปริญญานิพนธ์)</Text>
                     <Text>ภาควิชาเทคโนโลยีสารสนเทศ คณะเทคโนโลยีและการจัดการอุตสาหกรรม</Text>
                     <Text>มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ วิทยาเขตปราจีนบุรี</Text>
                 </View>

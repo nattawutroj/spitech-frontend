@@ -149,7 +149,7 @@ const Home = () => {
                                 sx={{ mb: 3 }}
                             >
                                 <DemoPaper square={false}>
-                                    <ListItemButton href='/dashboard'>
+                                    <ListItemButton href='/schedule'>
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>

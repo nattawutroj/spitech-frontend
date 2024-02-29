@@ -13,9 +13,16 @@ import { Stack } from "@mui/material";
 import { Button } from "@mui/material";
 import AllProjectList from "../libs/Report/AllProjectList"
 import Box from "@mui/material/Box";
+import Select from '@mui/material/Select';
+import { ProfileContext } from '../StaffDash';
+
+import MenuItem from '@mui/material/MenuItem';
+
 
 
 export default function AdminDash() {
+
+    const { profile } = React.useContext(ProfileContext)
 
     const [docgenlist, setDocgenlist] = React.useState([]);
 
@@ -39,9 +46,6 @@ export default function AdminDash() {
         setSemester(semester.data.result);
     }
 
-    React.useEffect(() => {
-        fetchsemester();
-    }, [])
 
 
     const [fileList, setFileList] = React.useState([]);
@@ -83,15 +87,35 @@ export default function AdminDash() {
     };
 
 
-    const Fetchreqreport = () => {
-        axios.get('resources/admin/reqproject', {}
-        ).then(res => {
-            setPdfUrl(null)
-            setFileList(res.data.result);
-            setExpanded(false);
-        }).catch(err => {
-            console.log(err);
-        })
+    const [staffList, setStaffList] = React.useState([]);
+
+    const [id_staff, setIdStaff] = React.useState(-1);
+    function FetchStaff() {
+        axios.get('/user/stafflist')
+            .then(res => {
+                console.log(res.data);
+                setStaffList(res.data.result);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+
+    const Fetchreqreport = async () => {
+        console.log("1")
+            await axios.get('resources/admin/reqproject/teacher', {
+                params: {
+                    id_staff: profile.id_staff
+                }
+            }
+            ).then(res => {
+                setPdfUrl(null)
+                setFileList(res.data.result);
+                setExpanded(false);
+            }).catch(err => {
+                console.log(err);
+            })
     }
 
     const Viewpdf = (id) => {
@@ -104,8 +128,15 @@ export default function AdminDash() {
     }
 
     React.useEffect(() => {
-        Fetchreqreport();
-    }, [selectstatus_code])
+        console.log(profile.length)
+        if (Object.keys(profile).length !== 0) {
+            FetchStaff();
+            fetchsemester();
+            Fetchreqreport();
+        }
+    }, [profile]);
+    
+    
 
     function fillterdata() {
         setDocgenlist([]);
@@ -257,6 +288,10 @@ export default function AdminDash() {
 
     return (
         <>
+        {
+
+        console.log(Object.keys(profile).length)
+        }
             <Grid container spacing={2}>
                 <Grid sx={{ height: '100vh', overflowY: 'scroll' }} item xs={12} md={12} lg={6}>
                     <Stack direction="row" spacing={2} sx={{ mt: 2 }}>

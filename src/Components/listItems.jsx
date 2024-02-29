@@ -30,7 +30,7 @@ export const mainListItems = (
             </ListItemIcon>
             <ListItemText primary="เพิ่มข้อมูลบุคคล" />
         </ListItemButton>
-        <ListItemButton href='/dashboard'>
+        <ListItemButton href='/dashboard/reportdata'>
             <ListItemIcon>
                 <BarChartIcon />
             </ListItemIcon>
