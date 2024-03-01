@@ -151,11 +151,12 @@ function BasicDocument() {
     const [isLoading, setIsLoading] = React.useState(true);
 
     const datacleandatetoday = (data) => {
-        // check previous date and current date remove data previous date
         var currentdate = new Date();
         var cleandate = [];
         data.forEach((element) => {
             var date = new Date(element.date);
+            date.setDate(date.getDate() + 1);
+
             if (date >= currentdate) {
                 cleandate.push(element);
             }
