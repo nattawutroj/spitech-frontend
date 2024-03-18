@@ -68,8 +68,10 @@ export default function AdminDash() {
     const [projectProcessWaitSchdule60Count, setProjectProcessWaitSchdule60Count] = React.useState(0);
     const [projectProcessWaitSchdule100Count, setProjectProcessWaitSchdule100Count] = React.useState(0);
     const [projectProcessWaitRecordCount, setProjectProcessWaitRecordCount] = React.useState(0);
+    const [projectProcessWaitConfiremT01Count, setprojectProcessWaitConfiremT01Count] = React.useState(0);
     const [projectProcessWaitRecord60Count, setProjectProcessWaitRecord60Count] = React.useState(0);
     const [projectProcessWaitRecord100Count, setProjectProcessWaitRecord100Count] = React.useState(0);
+    const [projectProcessWaitRecordFinalCount, setProjectProcessWaitRecordFinalCount] = React.useState(0);
     const listcount = () => {
         setLableexam1(0);
         setLableexam2(0);
@@ -79,8 +81,10 @@ export default function AdminDash() {
         setProjectProcessWaitSchdule60Count(0);
         setProjectProcessWaitSchdule100Count(0);
         setProjectProcessWaitRecordCount(0);
+        setprojectProcessWaitConfiremT01Count(0);
         setProjectProcessWaitRecord60Count(0);
         setProjectProcessWaitRecord100Count(0);
+        setProjectProcessWaitRecordFinalCount(0);
         fileList.map((file) => {
             if (file.id_project_status_title == 3) {
                 setLableexam1((prevLableexam1) => prevLableexam1 + 1);
@@ -117,6 +121,13 @@ export default function AdminDash() {
         })
         projectProcessWaitRecord100?.map((file) => {
             setProjectProcessWaitRecord100Count((prevProjectProcessWaitRecord100Count) => prevProjectProcessWaitRecord100Count + 1);
+        })
+        projectProcessWaitConfiremT01?.map((file) => {
+            setprojectProcessWaitConfiremT01Count((prevprojectProcessWaitConfiremT01Count) => prevprojectProcessWaitConfiremT01Count + 1);
+        })
+        projectProcessWaitRecordFinal.map((file) => {
+            console.log("hello")
+            setProjectProcessWaitRecordFinalCount((prevProjectProcessWaitRecordFinalCount) => prevProjectProcessWaitRecordFinalCount + 1);
         })
     }
 
@@ -172,8 +183,10 @@ export default function AdminDash() {
     const [projectProcessWaitSchdule60, setProjectProcessWaitSchdule60] = React.useState([]);
     const [projectProcessWaitSchdule100, setProjectProcessWaitSchdule100] = React.useState([]);
     const [projectProcessWaitRecord, setProjetProcessWaitRecord] = React.useState([]);
+    const [projectProcessWaitConfiremT01, setProjectProcessWaitConfiremT01] = React.useState([]);
     const [projectProcessWaitRecord60, setProjetProcessWaitRecord60] = React.useState([]);
     const [projectProcessWaitRecord100, setProjetProcessWaitRecord100] = React.useState([]);
+    const [projectProcessWaitRecordFinal, setProjetProcessWaitRecordFinal] = React.useState([]);
     const [expanded, setExpanded] = React.useState(false);
     const [openCancel, setOpenCancel] = React.useState(false);
     const [Canceldatafrom, setCanceldatafrom] = React.useState([]);
@@ -186,6 +199,7 @@ export default function AdminDash() {
     const [act, setAct] = React.useState(0);
     const [idprojectstatustitle, setIdprojectstatustitle] = React.useState('');
     const [modalRecord, setmodalRecord] = React.useState(false);
+    const [modalRecord2, setmodalRecord2] = React.useState(false);
     const [examrecord, setExamrecord] = React.useState('');
     const [examrecordcomment, setExamrecordcomment] = React.useState('');
     const [a1, setA1] = React.useState('');
@@ -254,6 +268,9 @@ export default function AdminDash() {
         else if (examrecord == 'ไม่ผ่าน') {
             handleCancelcommentUNC(a1, examrecordcomment, a3, a4)
         }
+        else if (examrecord == 'ไม่ผ่านยื่นสอบใหม่ภายในช่วงเวลา') {
+            handleCancelcommentUNC(a1, examrecordcomment, a3, a4)
+        }
         axios.post('/resources/admin/recordexam',
             {
                 id_project: ajid,
@@ -288,7 +305,7 @@ export default function AdminDash() {
 
     React.useEffect(() => {
         listcount();
-    }, [fileList, projectProcess, projectProcessWaitSchdule, projectProcessWaitSchdule60, projectProcessWaitSchdule100, projectProcessWaitRecord, projectProcessWaitRecord60, projectProcessWaitRecord100])
+    }, [fileList, projectProcess, projectProcessWaitSchdule, projectProcessWaitSchdule60, projectProcessWaitSchdule100, projectProcessWaitRecord, projectProcessWaitRecord60, projectProcessWaitRecord100, projectProcessWaitRecordFinal, projectProcessWaitConfiremT01])
 
     const FetchProjectProcess = () => {
         axios.get('resources/admin/projectadminprocess', {
@@ -600,6 +617,96 @@ export default function AdminDash() {
             });
     };
 
+    const FetchProjectProcessWaitRecordExtamFinal = () => {
+        axios.get('resources/admin/projectadminprocess', {
+            params: {
+                project_process: 15
+            }
+        })
+            .then(response => {
+                const projectProcessWaitRecordFinal = response.data.result.rows;
+
+                // Use Promise.all to handle multiple asynchronous calls
+                const fileLastUpdatePromises = projectProcessWaitRecordFinal.map(item => {
+                    return axios.get('resources/admin/projectfilelast', {
+                        params: {
+                            id_project: item.id_project
+                        }
+                    })
+                        .then(res => res.data.result[0])
+                        .catch(err => {
+                            console.log(err);
+                            return null;
+                        });
+                });
+
+                // Wait for all promises to resolve
+                return Promise.all(fileLastUpdatePromises)
+                    .then(fileLastUpdates => {
+                        // Combine projectProcessWaitRecordFinal with fileLastUpdates
+                        const combinedData = projectProcessWaitRecordFinal.map((item, index) => ({
+                            ...item,
+                            fileLastUpdate: fileLastUpdates[index]
+                        }));
+                        return combinedData;
+                    });
+            })
+            .then(combinedData => {
+                setPdfUrl(null);
+                // setProjectProcessWaitSchdule(prevProjectProcessWaitSchdule => [...prevProjectProcessWaitSchdule, ...combinedData]);
+                setProjetProcessWaitRecordFinal(combinedData);
+                setExpanded(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
+    const FetchProjectProcessWaitConfiremT01 = () => {
+        axios.get('resources/admin/projectadminprocess', {
+            params: {
+                project_process: 28
+            }
+        })
+            .then(response => {
+                const projectProcessWaitConfiremT01 = response.data.result.rows;
+
+                // Use Promise.all to handle multiple asynchronous calls
+                const fileLastUpdatePromises = projectProcessWaitConfiremT01.map(item => {
+                    return axios.get('resources/admin/projectfilelast', {
+                        params: {
+                            id_project: item.id_project
+                        }
+                    })
+                        .then(res => res.data.result[0])
+                        .catch(err => {
+                            console.log(err);
+                            return null;
+                        });
+                });
+
+                // Wait for all promises to resolve
+                return Promise.all(fileLastUpdatePromises)
+                    .then(fileLastUpdates => {
+                        // Combine projectProcessWaitRecord100 with fileLastUpdates
+                        const combinedData = projectProcessWaitConfiremT01.map((item, index) => ({
+                            ...item,
+                            fileLastUpdate: fileLastUpdates[index]
+                        }));
+                        return combinedData;
+                    });
+            })
+            .then(combinedData => {
+                setPdfUrl(null);
+                // setProjectProcessWaitSchdule(prevProjectProcessWaitSchdule => [...prevProjectProcessWaitSchdule, ...combinedData]);
+                setProjectProcessWaitConfiremT01(combinedData);
+                setExpanded(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
     const Viewpdf = (id) => {
         handleFileDownload(id);
     }
@@ -615,9 +722,11 @@ export default function AdminDash() {
         FetchProjectProcessWaitSchdule();
         FetchProjectProcessWaitSchdule60();
         FetchProjectProcessWaitSchdule100();
+        FetchProjectProcessWaitConfiremT01();
         FetchProjectProcessWaitRecordExtam();
         FetchProjectProcessWaitRecordExtam60();
         FetchProjectProcessWaitRecordExtam100();
+        FetchProjectProcessWaitRecordExtamFinal();
     }, [selectstatus_code])
 
     const handlereportCancel = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
@@ -678,19 +787,35 @@ export default function AdminDash() {
         }
     }
     const handleCancelcommentUNC = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
+        if (examrecord == 'ไม่ผ่านยื่นสอบใหม่ภายในช่วงเวลา') {
+            axios.post('resources/admin/reqreport/provere',
+                {
+                    id_project_file_paths: id_project_file_paths,
+                    comment: comment,
+                    id_project_status: id_project_status,
+                    id_project_status_title: id_project_status_title,
+                    id_project: ajid
+                }
+            ).then((response) => {
+                console.log(response);
+                window.location.reload();
+            });
+        }
+        else {
 
-        axios.post('resources/admin/reqreport/prove',
-            {
-                id_project_file_paths: id_project_file_paths,
-                comment: comment,
-                id_project_status: id_project_status,
-                id_project_status_title: id_project_status_title,
-                id_project: ajid
-            }
-        ).then((response) => {
-            console.log(response);
-            window.location.reload();
-        });
+            axios.post('resources/admin/reqreport/prove',
+                {
+                    id_project_file_paths: id_project_file_paths,
+                    comment: comment,
+                    id_project_status: id_project_status,
+                    id_project_status_title: id_project_status_title,
+                    id_project: ajid
+                }
+            ).then((response) => {
+                console.log(response);
+                window.location.reload();
+            });
+        }
     }
     const handlereportConfirmUNC = (id_project_file_paths, comment, id_project_status_title, id_project_status) => {
         axios.post('resources/admin/reqreport/approve',
@@ -1037,7 +1162,7 @@ export default function AdminDash() {
                                                     justifyContent="space-between"
                                                 >
                                                     <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
-                                                    <Typography sx={{ pt: 0.3 }}>{file.id_project_status_title == 6 ? 'สอบหัวข้อ' : ''}</Typography>
+                                                    {/* <Typography sx={{ pt: 0.3 }}>{file.id_project_status_title == 6 ? 'สอบหัวข้อ' : ''}</Typography> */}
                                                 </Stack>
                                             </AccordionSummary>
 
@@ -1066,6 +1191,64 @@ export default function AdminDash() {
                                                         spacing={2} sx={{ mt: 2.5 }}>
                                                         <Button
                                                             onClick={() => { setA1(file.fileLastUpdate.id_project_file_path), setA2("สำเร็จ"), setA3(file.id_project_status_title), setA4(file.id_project_status), setIdprojectstatustitle(file.id_project_status_title), setAjid(file.id_project), setmodalRecord(true) }} variant='contained' color='success' startIcon={<CheckIcon />}>บันทึกผลการสอบ</Button>
+                                                    </Stack>
+
+                                                </AccordionDetails>
+                                            }
+                                        </Accordion>
+                                    ))}
+                                </Accordion>
+                                :
+                                null
+                        }
+                        {
+                            selectstatus_code == 21 ?
+                                <Accordion sx={{ mt: 1, mb: 1 }}>
+                                    <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                        <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>ยื่นยันการแก้ไข ทก.01</Typography>
+                                        {
+                                            projectProcessWaitConfiremT01Count > 0 ?
+                                                <Typography sx={{ pt: 0.3, color: green[600] }}>มี {projectProcessWaitConfiremT01Count} โครงงานรอทำรายการ</Typography>
+                                                :
+                                                <Typography sx={{ pt: 0.3 }}>ไม่มีรายการ</Typography>
+                                        }
+                                    </AccordionSummary>
+                                    <Stack direction="row" justifyContent="space-between" alignItems="left" spacing={2} sx={{ borderTop: 1, ml: 2, pt: 2 }}>
+
+                                        <Typography sx={{ pt: 0.3, width: '37%', fontSize: 20, fontWeight: "bold", flexShrink: 0 }}>รหัสโครงงาน</Typography>
+
+                                        <Typography sx={{ pt: 0.3, width: '70%', fontSize: 20, fontWeight: "bold", flexShrink: 0 }}>ชื่อโครงงาน</Typography>
+                                    </Stack>
+                                    {projectProcessWaitConfiremT01.map((file, index) => (
+                                        <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ backgroundColor: "#FFD4B7", mt: 1, width: '100%' }} >
+                                            <AccordionSummary
+                                                expandIcon={<CloudUploadIcon />}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>{file.id_project}</Typography>
+                                                <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
+                                            </AccordionSummary>
+
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="space-between"
+                                                alignItems="center"
+                                                spacing={2}
+                                                sx={{ ml: 4, mr: 4 }}
+                                            >
+                                            </Stack>
+                                            <ProjectDetail act={act} id={file.id_project} />
+
+                                            {/* <Button onClick={() => { setAjid(file.id_project), setProjectcode(file.id_project), setOpenAddJust(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>แต่งตั้งกรรมการ</Button> */}
+                                            {
+                                                <AccordionDetails >
+                                                    <Stack direction="row"
+                                                        justifyContent="flex-end"
+                                                        alignItems="center"
+                                                        spacing={2} sx={{ mt: 2.5 }}>
+                                                        <Button onClick={() => { handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status) }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                        <Button onClick={() => { handlereportCancel(file.fileLastUpdate.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>
                                                     </Stack>
 
                                                 </AccordionDetails>
@@ -1280,7 +1463,7 @@ export default function AdminDash() {
                         }
                         {
                             selectstatus_code == 21 ?
-                                <Accordion>
+                                <Accordion sx={{ mb: 1 }}>
                                     <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
                                         <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>บันทึกผลการสอบหกสิบ</Typography>
                                         {
@@ -1618,6 +1801,65 @@ export default function AdminDash() {
                                 :
                                 null
                         }
+{/* asdvv */}
+                        {
+                            selectstatus_code == 21 ?
+                                <Accordion sx={{ mt: 1, mb: 1 }}>
+                                    <AccordionSummary expandIcon={<CloudUploadIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                        <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>ส่งปริญญานิพนธ์ฉบับสมบูรณ์ และ CD</Typography>
+                                        {
+                                            projectProcessWaitRecordFinalCount > 0 ?
+                                                <Typography sx={{ pt: 0.3, color: green[600] }}>มี {projectProcessWaitRecordFinalCount} โครงงานรอทำรายการ</Typography>
+                                                :
+                                                <Typography sx={{ pt: 0.3 }}>ไม่มีรายการ</Typography>
+                                        }
+                                    </AccordionSummary>
+                                    <Stack direction="row" justifyContent="space-between" alignItems="left" spacing={2} sx={{ borderTop: 1, ml: 2, pt: 2 }}>
+
+                                        <Typography sx={{ pt: 0.3, width: '37%', fontSize: 20, fontWeight: "bold", flexShrink: 0 }}>รหัสโครงงาน</Typography>
+
+                                        <Typography sx={{ pt: 0.3, width: '70%', fontSize: 20, fontWeight: "bold", flexShrink: 0 }}>ชื่อโครงงาน</Typography>
+                                    </Stack>
+                                    {projectProcessWaitRecordFinal.map((file, index) => (
+                                        <Accordion expanded={expanded === `${file.fileLastUpdate.id_project_file_path}`} onChange={() => { handleChange(`${file.fileLastUpdate.id_project_file_path}`), Viewpdf(file.fileLastUpdate.path) }} key={index} sx={{ backgroundColor: "#FFD4B7", mt: 1, width: '100%' }} >
+                                            <AccordionSummary
+                                                expandIcon={<CloudUploadIcon />}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <Typography sx={{ pt: 0.3, width: '40%', flexShrink: 0 }}>{file.id_project}</Typography>
+                                                <Typography sx={{ pt: 0.3 }}>{file.project_title_th}</Typography>
+                                            </AccordionSummary>
+
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="space-between"
+                                                alignItems="center"
+                                                spacing={2}
+                                                sx={{ ml: 4, mr: 4 }}
+                                            >
+                                            </Stack>
+                                            <ProjectDetail act={act} id={file.id_project} />
+
+                                            {/* <Button onClick={() => { setAjid(file.id_project), setProjectcode(file.id_project), setOpenAddJust(true) }} sx={{ mt: 2.5, mb: 1, ml: 2 }} variant='contained' color='primary' startIcon={<Add />}>แต่งตั้งกรรมการ</Button> */}
+                                            {
+                                                <AccordionDetails >
+                                                    <Stack direction="row"
+                                                        justifyContent="flex-end"
+                                                        alignItems="center"
+                                                        spacing={2} sx={{ mt: 2.5 }}>
+                                                        <Button onClick={() => { handlereportConfirm(file.fileLastUpdate.id_project_file_path, "สำเร็จ", file.id_project_status_title, file.id_project_status) }} variant='contained' color='success' startIcon={<CheckIcon />}>ยืนยัน</Button>
+                                                        {/* <Button onClick={() => { handlereportCancel(file.fileLastUpdate.id_project_file_path, "ทดสอบยกเลิก", file.id_project_status_title, file.id_project_status) }} variant='contained' color='error' startIcon={<DeleteIcon />}>ยกเลิก</Button>  */} {/* ถ้าต้องใช้งานยังไม่เพิ่ม ใน API */}
+                                                    </Stack>
+
+                                                </AccordionDetails>
+                                            }
+                                        </Accordion>
+                                    ))}
+                                </Accordion>
+                                :
+                                null
+                        }
                     </Grid>
                     {
                         pdfUrl != null ?
@@ -1794,7 +2036,70 @@ export default function AdminDash() {
                                     onClick={() => {
                                         examrecord != ''
                                             ?
-                                            examrecord == 'ไม่ผ่าน'
+                                            examrecord == 'ไม่ผ่าน' || examrecord == 'ไม่ผ่านยื่นสอบใหม่ภายในช่วงเวลา'
+                                                ?
+                                                examrecordcomment != ''
+                                                    ?
+                                                    confirm('ยืนยันต้องการบันทึกข้อมูลนี้หรือไม่')
+                                                        ?
+                                                        cfrecordexam()
+                                                        :
+                                                        null
+                                                    :
+                                                    window.alert('กรุณากรอกหมายเหตุ')
+                                                :
+                                                confirm('ยืนยันต้องการบันทึกข้อมูลนี้หรือไม่')
+                                                    ?
+                                                    cfrecordexam()
+                                                    :
+                                                    null
+                                            :
+                                            window.alert('กรุณาเลือกผลการสอบ')
+                                    }}
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    ยืนยัน
+                                </Button>
+                                <Button onClick={() => { setmodalRecord(false) }} variant='contained' color='error'>ยกเลิก</Button>
+                            </Stack>
+                        </Box>
+                    </Box>
+                </Modal>
+                <Modal open={modalRecord2} onClose={() => { setmodalRecord(false) }}>
+                    <Box sx={{ ...style, width: 400 }}>
+                        <h2 id="parent-modal-title">บันทึกผลการตรวจ ทก.01</h2>
+                        <RadioGroup
+                            onChange={(e) => { setExamrecord(e.target.value) }}
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                        >
+                            <FormControlLabel value="ผ่าน" control={<Radio />} label="ผ่าน" />
+                            <FormControlLabel value="ไม่ผ่านยื่นใหม่ภายในช่วงเวลา" control={<Radio />} label="ไม่ผ่านยื่นส่งใหม่" />
+                            <FormControlLabel value="ไม่ผ่าน" control={<Radio />} label="ไม่ผ่าน" />
+                        </RadioGroup>
+                        <Box component="form" noValidate onSubmit={handleCancelcomment} sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                fullWidth
+                                id="comment"
+                                label="หมายเหตุ"
+                                name="comment"
+                                autoFocus
+                                value={examrecordcomment}
+                                onChange={(e) => { setExamrecordcomment(e.target.value) }}
+                            />
+
+                            <Stack direction="row"
+                                justifyContent="flex-end"
+                                alignItems="center"
+                                spacing={2} sx={{ mt: 2.5 }}><Button
+                                    onClick={() => {
+                                        examrecord != ''
+                                            ?
+                                            examrecord == 'ไม่ผ่าน' || examrecord == 'ไม่ผ่านยื่นสอบใหม่ภายในช่วงเวลา'
                                                 ?
                                                 examrecordcomment != ''
                                                     ?

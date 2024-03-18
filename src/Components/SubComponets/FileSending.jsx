@@ -144,7 +144,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                 ?
                 <>
                     {
-                        (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) ?
+                        (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11 || itemprojectinfo.id_project_status_title == 27) ?
                             <Typography variant="h6" gutterBottom component="div">
                                 <Stack sx={{ mt: 2 }} spacing={2} direction="row"
                                     justifyContent="space-around"
@@ -153,7 +153,10 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                 >
 
                                     <Typography variant="body2" color="text.secondary">
-                                        {file ? file.name : 'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'}
+                                        {file ? file.name :
+                                            itemprojectinfo.id_project_status_title == 27 ? 'โปรดเลือกไฟล์ ทก.01 เพื่อตรวจสอบการแก้ไข ทก.01' :
+                                                'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'
+                                        }
                                     </Typography>
                                     <Button component="label" variant="contained" startIcon={<UploadFileIcon />}>
                                         Upload File
@@ -191,7 +194,10 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                         onClick={handleFileUpload}
                                         disabled={!file} // Disable the button if no file selected
                                     >
-                                        ยื่นสอบ
+
+                                        {
+                                            (itemprojectinfo.id_project_status_title == 27) ? 'ยื่นแก้ไข ทก.01' : 'ยื่นสอบ'
+                                        }
                                     </Button>
                                 </Stack>
                             </Typography>
@@ -294,7 +300,7 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                     </Accordion>
                 </>
                 :
-                (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11) ?
+                (itemprojectinfo.id_project_status_title == 2 || itemprojectinfo.id_project_status_title == 7 || itemprojectinfo.id_project_status_title == 11 || itemprojectinfo.id_project_status_title == 27) ?
                     <Typography variant="h6" gutterBottom component="div">
                         <Stack sx={{ mt: 2 }} spacing={2} direction="row"
                             justifyContent="space-around"
@@ -303,7 +309,10 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                         >
 
                             <Typography variant="body2" color="text.secondary">
-                                {file ? file.name : 'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'}
+                                {file ? file.name :
+                                    itemprojectinfo.id_project_status_title == 27 ? 'โปรดเลือกไฟล์ ทก.01 เพื่อตรวจสอบการแก้ไข ทก.01' :
+                                        'โปรดเลือกไฟล์ ทก.01 เพื่อพิจารณาการยื่นสอบ'
+                                }
                             </Typography>
                             <Button component="label" variant="contained" startIcon={<UploadFileIcon />}>
                                 Upload File
@@ -341,7 +350,9 @@ export default function FileSending({ itemprojectinfo, id_project }) {
                                 onClick={handleFileUpload}
                                 disabled={!file} // Disable the button if no file selected
                             >
-                                ยื่นสอบ
+                                {
+                                    (itemprojectinfo.id_project_status_title == 27) ? 'ยื่นแก้ไข ทก.01' : 'ยื่นสอบ'
+                                }
                             </Button>
                         </Stack>
                     </Typography>
