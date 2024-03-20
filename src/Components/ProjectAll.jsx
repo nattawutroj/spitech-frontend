@@ -67,14 +67,8 @@ export default function AdminDash() {
             // Create a data URL from the Blob
             const dataUrl = URL.createObjectURL(blob);
 
-            // Open the PDF file in a new window or tab
-            if (window.innerWidth < 900) {
                 setPdfUrl(null)
                 window.open(dataUrl);
-            }
-            else {
-                setPdfUrl(dataUrl);
-            }
         }).catch(err => {
             setPdfUrl(null)
             console.log(err);
@@ -89,13 +83,25 @@ export default function AdminDash() {
             setPdfUrl(null)
             setFileList(res.data.result);
             setExpanded(false);
+            console.log(res.data.result);
         }).catch(err => {
             console.log(err);
         })
     }
 
     const Viewpdf = (id) => {
-        handleFileDownload(id);
+        console.log(id)
+        axios.get('resources/public/fefile', {
+            params: {
+                id_project: id
+            }
+        }
+        ).then(res => {
+            console.log(res)
+            handleFileDownload(res.data.result[0].path)
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
 
@@ -311,6 +317,7 @@ export default function AdminDash() {
                     }
                     {
                         fileList?.map((file, index) => (
+                            console.log(file),
                             semester_select == -1 ?
                                 selectstatus_code == 0 ?
                                     <Ifodata file={file} index={index} key={index} />
@@ -478,6 +485,9 @@ export default function AdminDash() {
                             null
                 }
             </AccordionSummary>
+
+            {/* btn */}
+            <Button onClick={() => { Viewpdf(file.id_project) }} variant="contained" sx={{ mt: 1, ml: 1, mb: 1 }}>ดูรายละเอียด ทก.01</Button>
 
             <ProjectDetail id={file.id_project} />
 
