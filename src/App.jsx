@@ -7,6 +7,7 @@ import RouteStudenDash from './StudentDash';
 import Report from './Components/SubComponets/Report';
 import Schedule from './libs/Report/Schedule'; 
 import StaffDash from './StaffDash'
+import Projectfinpublic from './Components/Projectfinpublic';
 
 const theme = createTheme({
   typography: {
@@ -43,6 +44,7 @@ function App() {
           <Route path="/studentdash/*" element={<RouteStudenDash />} />
           <Route path="/testreport/:id/:selectReport" element={<Report />} />
           <Route path="/schedule" element={<Schedule />} />
+          <Route path="/allpro" element={<Projectfinpublic />} />
           <Route path="/*" element={<h1>Not Found 404</h1>} />
         </Routes>
       </BrowserRouter>

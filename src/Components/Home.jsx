@@ -156,7 +156,7 @@ const Home = () => {
                                         <ListItemText primary="ตารางสอบ" />
                                     </ListItemButton></DemoPaper>
                                 <DemoPaper square={false}>
-                                    <ListItemButton href='/dashboard/record'>
+                                    <ListItemButton href='/allpro'>
                                         <ListItemIcon>
                                             <PausePresentation />
                                         </ListItemIcon>
