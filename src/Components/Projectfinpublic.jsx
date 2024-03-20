@@ -5,7 +5,7 @@ import { AccordionSummary } from "@mui/material";
 import { Typography } from "@mui/material";
 import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
 import { green, red } from "@mui/material/colors";
-import ProjectDetail from './SubComponets/ProjectDetail';
+import ProjectDetail from './SubComponets/ProjectDetailPub';
 import { FormControl } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { NativeSelect } from "@mui/material";
@@ -27,7 +27,7 @@ export default function AdminDash() {
 
     const getsemester = async () => {
         try {
-            const response = await axios.get('/resources/admin/aasemester')
+            const response = await axios.get('/resources/public/aasemester')
             return response
         } catch (err) {
             console.log(err);
@@ -46,7 +46,7 @@ export default function AdminDash() {
 
     const [fileList, setFileList] = React.useState([]);
     const [expanded, setExpanded] = React.useState(false);
-    const [selectstatus_code, setSelectStatus_code] = React.useState(0);
+    const [selectstatus_code, setSelectStatus_code] = React.useState(8);
 
     const [semester_select, setSemester_Select] = React.useState(-1);
 
@@ -78,7 +78,7 @@ export default function AdminDash() {
 
 
     const Fetchreqreport = () => {
-        axios.get('resources/admin/reqproject', {}
+        axios.get('resources/public/reqproject', {}
         ).then(res => {
             setPdfUrl(null)
             setFileList(res.data.result);
@@ -247,7 +247,7 @@ export default function AdminDash() {
 
     // const fetchfilehistory = (xid_project) => {
 
-    //     axios.get('resources/admin/filehistory', {
+    //     axios.get('resources/public/filehistory', {
     //         params: {
     //             id_project: xid_project
     //         }
@@ -286,31 +286,6 @@ export default function AdminDash() {
                                 }
                             </NativeSelect>
                         </FormControl>
-                        <FormControl sx={{ m: 1, mt: 2, minWidth: 120 }} size="small">
-                            <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                                สถานะ
-                            </InputLabel>
-                            <NativeSelect
-                                defaultValue={0}
-                                inputProps={{
-                                    name: 'status_code',
-                                    id: 'uncontrolled-native',
-                                }}
-                                onChange={(e) => { setSelectStatus_code(e.target.value) }}
-                            >
-                                <option value={0}>ทุกสถานะ</option>
-                                <option value={1}>รอยื่นสอบหัวข้อ</option>
-                                <option value={2}>ยื่นสอบหัวข้อ</option>
-                                <option value={3}>สอบหัวข้อผ่านแล้ว</option>
-                                <option value={4}>สอบหกสิบ</option>
-                                <option value={5}>สอบหกสิบผ่านแล้ว</option>
-                                <option value={6}>สอบร้อย</option>
-                                <option value={7}>สอบร้อยผ่านแล้ว</option>
-                                <option value={8}>เสร็จสมบูรณ์</option>
-                                <option value={9}>กำลังเริ่มต้นโครงงาน</option>
-                            </NativeSelect>
-                        </FormControl>
-                        <Button onClick={() => { fillterdata(), setResetCounter(resetCounter + 1); }} variant="contained" sx={{ mt: 2 }} >พิมพ์รายงาน</Button>
                     </Stack>
                     {
                         // setDocgenlist([])
