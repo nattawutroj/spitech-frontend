@@ -264,7 +264,7 @@ export default function AdminDash() {
     return (
         <>
             <Grid container spacing={2}>
-                <Grid sx={{ height: '100vh', overflowY: 'scroll' }} item xs={12} md={12} lg={6}>
+                <Grid sx={{ height: '100vh', overflowY: 'scroll' }} item xs={12} md={12} lg={12}>
                     <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
                         <FormControl sx={{ m: 1, mt: 2, minWidth: 120 }} size="small">
                             <InputLabel variant="standard" htmlFor="uncontrolled-native">
